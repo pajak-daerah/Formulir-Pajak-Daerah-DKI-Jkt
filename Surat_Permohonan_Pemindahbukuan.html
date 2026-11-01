@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Surat Permohonan Pemindahbukuan</title>
+<style>
+:root{--bg:#eef1f5;--paper:#fff;--ink:#111;--line:#222;--acc:#0f4c81;--mut:#5b6572;--fld:#e6d9f7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--mut:#9aa6b4;--acc:#6db3f2}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:14px/1.4 Arial,Helvetica,sans-serif;color:var(--ink)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:var(--acc);color:#fff}
+.bar b{flex:1;min-width:180px}
+.bar button{border:0;border-radius:6px;padding:8px 14px;font-weight:700;cursor:pointer;background:#fff;color:#0f4c81}
+.wrap{overflow-x:auto;padding:14px}
+.paper{width:820px;margin:0 auto;background:#fff;color:#111;border:1px solid #bbb;padding:18px 22px;box-shadow:0 2px 10px #0002}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #000;padding:3px 5px;vertical-align:top;font-weight:400}
+.sec{background:#fff;font-weight:700;padding:3px 5px;border:1px solid #000;border-top:0}
+.sec.f{border-top:1px solid #000}
+input,textarea,select{font:inherit;color:#111;color-scheme:light;background:var(--fld);border:0;border-bottom:1px dotted #888;padding:2px 4px;width:100%;outline:0;display:block}
+select option,select optgroup{background:#fff;color:#111}
+textarea{resize:vertical;min-height:44px}
+input:focus,textarea:focus,select:focus{background:#d6c2f0}
+.ck{display:flex;align-items:center;gap:6px;cursor:pointer}
+.ck input{display:inline-block;width:auto;margin:0}
+.id td{border:0;padding:2px 4px}.id td:first-child{width:150px}.id td:nth-child(2){width:12px}
+.warn{color:#c00000;font-weight:700;font-style:italic}
+.judul{margin:14px 0 8px;font-weight:700;text-align:center}
+.note{color:var(--mut);font-size:12px;max-width:820px;margin:8px auto}
+@media print{
+ :root{padding:0}body{background:#fff}.bar,.note{display:none}.wrap{padding:0;overflow:visible}
+ .paper{border:0;box-shadow:none;width:100%;padding:0}
+ input,textarea,select{background:transparent!important;color:#111!important;border-bottom:0}
+ @page{size:A4;margin:12mm}
+}
+#pv{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;background:#2b2f36}
+#pv.on{display:flex}
+.pvbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:var(--acc);color:#fff}
+.pvbar b{flex:1;min-width:120px}
+.pvbar button{border:0;border-radius:6px;padding:8px 12px;min-width:38px;font-weight:700;cursor:pointer;background:#fff;color:#0f4c81}
+.pvbar span{min-width:48px;text-align:center;font-weight:700}
+.pvbody{flex:1;overflow:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.pvsize{margin:0 auto;position:relative}
+.pvin{width:794px;transform-origin:0 0}
+@media print{#pv{display:none!important}}
+</style>
+</head>
+<body>
+<div class="bar"><b>Surat Permohonan Pemindahbukuan – Formulir Pengisian</b>
+<button onclick="tampil()">Tampilkan</button><button onclick="reset()">Kosongkan</button><button id="bpdf" onclick="simpanPDF()">Simpan PDF</button></div>
+<div class="wrap"><div class="paper" id="f"></div></div>
+<p class="note">Isi langsung pada formulir. Hasilnya 2 halaman: Surat Permohonan Pemindahbukuan dan Surat Pernyataan. Tanda tangan dan materai dibubuhkan setelah dicetak. Klik “Tampilkan” untuk melihat hasilnya (bisa di-zoom) dan “Simpan PDF” untuk menyimpannya sebagai PDF.</p>
+<div id="pv" role="dialog" aria-label="Pratinjau"><div class="pvbar"><b>Pratinjau</b><button onclick="zoomTo(Z-.1)" aria-label="Perkecil">−</button><span id="zl">100%</span><button onclick="zoomTo(Z+.1)" aria-label="Perbesar">+</button><button onclick="fit()">Pas</button><button onclick="zoomTo(1)">100%</button><button onclick="simpanPDF()">Simpan PDF</button><button onclick="tutup()">Tutup</button></div><div class="pvbody" id="pvbody"><div class="pvsize" id="pvsize"><div class="pvin" id="pvin"></div></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const PW=595.28,PH=841.89; /* A4 */
+const FJ={A:['helvetica','normal'],AB:['helvetica','bold'],AI:['helvetica','italic'],T:['times','normal'],TB:['times','bold']};
+const ids=()=>[...document.querySelectorAll('#f input,#f textarea,#f select')];
+const JS=['SSPD','STPD','SKPD-LB','SKPD-KB'];
+const UP=['Cakung','Cempaka Putih','Cengkareng','Cilandak','Cilincing','Cipayung','Ciracas','Duren Sawit','Gambir','Grogol Petamburan','Jagakarsa','Jatinegara','Johar Baru','Kalideres','Kebayoran Baru','Kebayoran Lama','Kebon Jeruk','Kelapa Gading','Kembangan','Kemayoran','Kepulauan Seribu','Koja','Kramat Jati','Makasar','Mampang Prapatan','Matraman','Menteng','Pademangan','Palmerah','Pancoran','Pasar Minggu','Pasar Rebo','Penjaringan','Pesanggrahan','Pulogadung','Sawah Besar','Senen','Setiabudi','Taman Sari','Tambora','Tanah Abang','Tebet','Tanjung Priok'].sort((a,b)=>a.localeCompare(b));
+const KOTA={'Jakarta Pusat':['Cempaka Putih','Gambir','Johar Baru','Kemayoran','Menteng','Sawah Besar','Senen','Tanah Abang'],'Jakarta Utara':['Cilincing','Kelapa Gading','Kepulauan Seribu','Koja','Pademangan','Penjaringan','Tanjung Priok'],'Jakarta Barat':['Cengkareng','Grogol Petamburan','Kalideres','Kebon Jeruk','Kembangan','Palmerah','Taman Sari','Tambora'],'Jakarta Selatan':['Cilandak','Jagakarsa','Kebayoran Baru','Kebayoran Lama','Mampang Prapatan','Pancoran','Pasar Minggu','Pesanggrahan','Setiabudi','Tebet'],'Jakarta Timur':['Cakung','Cipayung','Ciracas','Duren Sawit','Jatinegara','Kramat Jati','Makasar','Matraman','Pasar Rebo','Pulogadung']};
+const SELW=id=>'<select id="'+id+'"><option value="">-- Pilih --</option>'+Object.keys(KOTA).map(k=>'<optgroup label="'+k+'">'+KOTA[k].map(u=>'<option value="UPPPD Kecamatan '+u+'">UPPPD Kecamatan '+u+'</option>').join('')+'</optgroup>').join('')+'</select>';
+const I=(id,x)=>'<input id="'+id+'" '+(x||'')+'>';
+const TA=id=>'<textarea id="'+id+'" rows="2"></textarea>';
+const SELJ=id=>'<select id="'+id+'"><option value="">— Pilih —</option>'+JS.map(j=>'<option>'+j+'</option>').join('')+'</select>';
+const R=(l,c)=>'<tr><td>'+l+'</td><td>:</td><td>'+c+'</td></tr>';
+const SEC=(t,f)=>'<div class="sec'+(f?' f':'')+'">'+t+'</div>';
+const TB=r=>'<table class="id" style="border:1px solid #000;border-top:0">'+r+'</table>';
+const HD=(t,cls)=>'<tr><td colspan="3"'+(cls?' class="'+cls+'"':'')+'><b>'+t+'</b></td></tr>';
+const pay=p=>R('Nama Wajib Pajak',I(p+'nama'))+R('NIK',I(p+'nik','inputmode="numeric" maxlength="16"'))+R('Alamat',TA(p+'alamat'))+R('NOP PBB-P2',I(p+'nop','inputmode="numeric" autocomplete="off" placeholder="31.XX.XXX.XXX.XXX.XXXX.X"'))+R('Jenis Setoran',SELJ(p+'js'))+R('Tanggal Bayar',I(p+'tgl','type="date" style="width:170px"'))+R('NTPD',I(p+'ntpd'))+R('Kode Bayar',I(p+'kode'))+R('Jumlah Bayar',I(p+'jml','placeholder="mis. Rp 1.000.000"'));
+function build(){
+ let h='<div class="judul">SURAT PERMOHONAN PEMINDAHBUKUAN &amp; SURAT PERNYATAAN</div>';
+ h+=SEC('Surat',1)+TB(R('Nomor',I('nomor'))+R('Sifat',I('sifat'))+R('Lampiran',I('lamp'))+R('Hal: Pemindahbukuan Pembayaran Pajak',I('pajak','placeholder="mis. PBB"'))+R('Ditujukan kepada',SELW('wil'))+R('Alamat kantor UPPPD',I('alm'))+R('Tanggal',I('tgl','type="date" style="width:170px"')));
+ h+=SEC('Wajib pajak / kuasa wajib pajak (pemohon)')+TB(R('Nama',I('nama'))+R('Alamat',TA('alamat'))+R('NIK',I('nik','inputmode="numeric" maxlength="16"'))+R('No. Telp/WA',I('telp','type="tel"'))+R('E-mail',I('email','type="email"'))+R('Nama penandatangan',I('ttd','placeholder="kosong = nama pemohon"')));
+ h+=SEC('Alasan permohonan')+TB('<tr><td colspan="3">'+TA('alasan')+'</td></tr>');
+ h+=SEC('Dari (pembayaran asal)')+TB(pay('d_'));
+ h+=SEC('Kepada (pembayaran tujuan)')+TB(pay('k_'));
+ h+=SEC('Surat pernyataan')+TB(HD('Otomatis mengikuti data pemohon di atas (tetap bisa diubah)','warn')+R('Nama lengkap',I('p_nama'))+R('NIK KTP',I('p_nik','inputmode="numeric" maxlength="16"'))+R('NOP PBB-P2',I('p_nopd','autocomplete="off"'))+R('Alamat',TA('p_alamat'))+R('Jenis Pajak',I('p_pajak','placeholder="mis. PBB"'))+R('Masa/Tahun Pajak',I('p_masa'))+R('Jumlah Pembayaran',I('p_jml','placeholder="mis. Rp 1.000.000"')));
+ $('f').innerHTML=h}
+function today(){const t=new Date();return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')}
+function defaults(){ids().forEach(x=>{if(x.type==='checkbox')x.checked=false;else if(x.tagName==='SELECT')x.selectedIndex=0;else x.value=''});
+ $('tgl').value=today();$('wil').value='UPPPD Kecamatan Penjaringan';$('alm').value=ADR['UPPPD Kecamatan Penjaringan'];$('d_nop').value=nopf('');$('k_nop').value=nopf('');$('p_nopd').value=nopf('');ids().forEach(x=>{delete x.dataset.m})}
+function reset(){if(confirm('Kosongkan semua isian?'))defaults()}
+const ADR={"UPPPD Kecamatan Tebet":"Kantor Kecamatan Tebet Lt. 3, Jl. Prof. DR. Soepomo No.55C, Tebet, Jakarta Selatan 12810","UPPPD Kecamatan Tanjung Priok":"Jl. Sunter Karya Utara Blok G No. 1, Tanjung Priok, Jakarta Utara 14350","UPPPD Kecamatan Tanah Abang":"Gedung Graha Mental Spiritual Lantai 4, Jl. Awaludin II No. 17 A RT 002/RW 17, Kebon Melati, Tanah Abang, Jakarta Pusat","UPPPD Kecamatan Tambora":"Kantor Kecamatan Tambora, Jl. P. Tubagus Angke Jembatan Dua, Tambora, Jakarta Barat 11330","UPPPD Kecamatan Taman Sari":"Alamat Sementara UPPPD Taman Sari di Gedung Arsip Kantor Samsat Jakarta Pusat Utara, Jl. Gunung Sahari No.13","UPPPD Kecamatan Setiabudi":"Kantor UPPPD Setiabudi Mal Pelayanan Publik Lantai 4, Jl. Epicentrum Selatan RT. 002/005, Kel. Karet Kuningan, Kec. Setiabudi, Jakarta Selatan","UPPPD Kecamatan Senen":"Kantor Kecamatan Senen, Jl. Kramat Raya No. 114, Senen, Jakarta Pusat 10450","UPPPD Kecamatan Sawah Besar":"Gedung Dinas Teknis Kelautan dan Pertanian Lt. 2, Jl. Gunung Sahari Raya No. 11, Sawah Besar","UPPPD Kecamatan Pulogadung":"Jl. Cipinang Baru Raya No.16, RT.11/RW.5, Cipinang, Kec. Pulo Gadung, Kota Jakarta Timur 13240","UPPPD Kecamatan Pesanggrahan":"Gedung Kantor UPPPD Pesanggrahan, Jl. Ciledug Raya No. 7 RT 001/04","UPPPD Kecamatan Penjaringan":"Jl. Pluit Raya No.5, Penjaringan, Jakarta Utara 14440","UPPPD Kecamatan Pasar Rebo":"Jalan Raya Pondok Gede No. 1 Kel. Dukuh, Kec. Kramat Jati, Jakarta Timur","UPPPD Kecamatan Pasar Minggu":"Jl. Raya Lenteng Agung No. 232, Lenteng Agung, Kec. Jagakarsa, Jakarta Selatan 12610","UPPPD Kecamatan Pancoran":"Kawasan Kantor Kecamatan Pancoran, Jl. Pengadegan Timur II No. 2, Pancoran, Jakarta Selatan 12770","UPPPD Kecamatan Palmerah":"Jl. Anggrek Rosliana Blok E No.31 Rt.005 Rw.002, Kemanggisan, Palmerah, Jakarta Barat 11480","UPPPD Kecamatan Pademangan":"Kantor Bersama Samsat Utara Pusat, lantai 7, Jl. Gunung Sahari No.13, Pademangan, Jakarta Utara 14420","UPPPD Kecamatan Menteng":"Gedung Naya Cikini, Lantai 2, Jl. Cikini Raya No.42, Menteng, Jakarta Pusat 10330","UPPPD Kecamatan Matraman":"Jl. D.I. Panjaitan Kav.55, Kebon Nanas, Jatinegara, Jakarta Timur","UPPPD Kecamatan Mampang Prapatan":"Ged. Dinas Pariwisata dan Kebudayaan DKI Jakarta Ged. C Lantai 1, Jl. Kuningan Barat Raya No.1, Kelurahan Kuningan Barat","UPPPD Kecamatan Makasar":"Jl. D.I. Panjaitan, Kav. 55, Kel. Kebon Nanas, Kec. Jatinegara, Jakarta Timur","UPPPD Kecamatan Kramat Jati":"Jalan Raya Pondok Gede No. 1 Kel. Dukuh, Kec. Kramat Jati, Jakarta Timur","UPPPD Kecamatan Koja":"Jl. Plumpang Semper No.41, Koja, Jakarta Utara","UPPPD Kecamatan Kepulauan Seribu":"Kantor Bersama Samsat Jakarta Utara-Pusat, lantai 6, Jl. Gunung Sahari No. 13, Pademangan, Jakarta Utara 14420","UPPPD Kecamatan Kembangan":"Jl. Kembangan Raya RT.5/RW.1, Kembangan Utara, Kecamatan Kembangan, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11610","UPPPD Kecamatan Kemayoran":"Gedung UPPPD Cempaka Putih dan Kemayoran, Jl. Cempaka Putih Barat Blok E No.2, Kec. Cempaka Putih, Jakarta Pusat","UPPPD Kecamatan Kelapa Gading":"Jl. Gading Putih Raya No.1 (samping Klinik Medikarya/depan Pasar Mandiri), Kelapa Gading Timur, Jakarta Utara","UPPPD Kecamatan Kebon Jeruk":"Jl. Lapangan Bola No.1, Kebon Jeruk, Jakarta Barat (Belakang Kantor Kecamatan Kebon Jeruk)","UPPPD Kecamatan Kebayoran Lama":"Jalan Kebon Nanas V, Grogol Utara, Kec. Kebayoran Lama, Jakarta Selatan","UPPPD Kecamatan Kebayoran Baru":"Jalan Kebon Nanas V, Grogol Utara, Kec. Kebayoran Lama, Jakarta Selatan (Gabung dengan UPPPD Kebayoran Lama)","UPPPD Kecamatan Kalideres":"Jl. Kembangan Raya RT.5/RW.1, Kembangan Utara, Kecamatan Kembangan, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11610","UPPPD Kecamatan Johar Baru":"Kantor Kecamatan Johar Baru, Jl. Johar Baru Utara I No. 1, Johar Baru, Jakarta Pusat 10560","UPPPD Kecamatan Jatinegara":"Jl. D.I. Panjaitan, Kav. 55, Kel. Kebon Nanas, Kec. Jatinegara, Jakarta Timur","UPPPD Kecamatan Jagakarsa":"Jl. Raya Lenteng Agung No. 232, Lenteng Agung, Kec. Jagakarsa, Jakarta Selatan 12610","UPPPD Kecamatan Grogol Petamburan":"Jl. Gelong Baru, Tomang, Grogol Petamburan, Jakarta Barat 11440","UPPPD Kecamatan Gambir":"Gedung Naya Cikini, Lantai 2, Jl. Cikini Raya No.42, Menteng, Jakarta Pusat 10330","UPPPD Kecamatan Duren Sawit":"Kantor UPPPD Duren Sawit, Jl. Pahlawan Revolusi No. 3, Kel. Pondok Bambu, Kec. Duren Sawit, Jakarta Timur 13430","UPPPD Kecamatan Ciracas":"Kantor UPPPD Ciracas, Jl. Kampung Jati RT. 006 RW. 003, Kel. Rambutan, Kec. Ciracas, Jakarta Timur 13830","UPPPD Kecamatan Cipayung":"Kantor UPPPD Cipayung, Jl. Raya Cilangkap No. 1 RT. 03 RW. 06, Kel. Cilangkap, Kec. Cipayung, Jakarta Timur 13840","UPPPD Kecamatan Cilincing":"Jl. Sungai Landak No. 7 (sebelah Kantor Kecamatan Cilincing), Cilincing, Jakarta Utara 14120","UPPPD Kecamatan Cilandak":"Jl. Pangeran Antasari No.55.A, Cilandak Barat, Cilandak, Jakarta Selatan","UPPPD Kecamatan Cengkareng":"Jl. Lingkar Luar Barat No.11, Cengkareng Timur, Kecamatan Cengkareng, Jakarta Barat 11730","UPPPD Kecamatan Cempaka Putih":"Jl. Cempaka Putih Barat No.19, RT.003/007, Kel. Cempaka Putih Barat, Kec. Cempaka Putih, Jakarta Pusat","UPPPD Kecamatan Cakung":"Kantor UPPPD Cakung, Jl. Raya Penggilingan, Komplek PIK (depan Masjid Attaqwa/samping SMPN 236), Penggilingan, Jakarta Timur"};
+document.addEventListener('change',e=>{if(e.target.id==='wil')$('alm').value=ADR[e.target.value]||''});
+document.addEventListener('input',e=>{const t=e.target;
+ if(['nik','d_nik','k_nik','p_nik'].includes(t.id))t.value=t.value.replace(/\D/g,'');
+ if(['d_jml','k_jml','p_jml'].includes(t.id)){const g=t.value.replace(/\D/g,'').replace(/^0+(?=\d)/,'');t.value=g?'Rp '+g.replace(/\B(?=(\d{3})+(?!\d))/g,'.'):''}
+ if(t.id.startsWith('p_'))t.dataset.m=t.value?'1':'';
+ {const S={nama:'p_nama',nik:'p_nik',alamat:'p_alamat',pajak:'p_pajak'};if(S[t.id]){const o=$(S[t.id]);if(!o.dataset.m)o.value=t.value}}
+ if(isNop(t.id)){const v=t.value,a=v.replace(/\D/g,'');let r=v.startsWith('31.')?v.slice(3).replace(/\D/g,''):(a.startsWith('31')?a.slice(2):'');t.value=nopf(r.slice(0,16));const p=t.value.indexOf('X'),q=p<0?t.value.length:p;t.setSelectionRange(q,q)}});
+function isNop(id){return id==='d_nop'||id==='k_nop'||id==='p_nopd'}
+document.addEventListener('input',e=>{const t=e.target,M={d_nop:'p_nopd',d_jml:'p_jml'};if(t.id==='d_tgl'){const o=$('p_masa');if(!o.dataset.m)o.value=t.value.slice(0,4)}if(M[t.id]){const o=$(M[t.id]);if(!o.dataset.m)o.value=t.value}});
+function nopf(r){const d='31'+r,g=[2,2,3,3,3,4,1];let i=0;return g.map(n=>{const s=d.slice(i,i+n);i+=n;return s+'X'.repeat(n-s.length)}).join('.')}
+document.addEventListener('focusin',e=>{const t=e.target;if(isNop(t.id))setTimeout(()=>{const p=t.value.indexOf('X');if(p>=0)t.setSelectionRange(p,p)},0)});
+document.addEventListener('keydown',e=>{const t=e.target;if(e.key==='Backspace'&&isNop(t.id)&&t.selectionStart===t.selectionEnd&&t.value[t.selectionStart-1]==='.'){const s=t.selectionStart-1;t.setSelectionRange(s,s)}});
+function vals(){const V={};ids().forEach(x=>{if(!x.id)return;
+ let v=x.value.replace(/\s+/g,' ').trim();
+ if(v&&x.type==='date'){const d=new Date(v+'T00:00:00');v=d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}
+ V[x.id]=v});
+ ['d_nop','k_nop'].forEach(k=>{if(V[k]==='31'||V[k]==='31.')V[k]=''});return V}
+
+/* ---------- tata letak (A4, 2 halaman) ---------- */
+function tools(B,SZ){
+ const W=(s,sz=SZ,f='A')=>B.w(s,sz,f);
+ const T=(s,x,yy,sz=SZ,f='A')=>B.text(s,x,yy,sz,f);
+ const dots=n=>'.'.repeat(n);
+ const dotsW=(w,sz=SZ)=>dots(Math.max(3,Math.floor(w/W('.',sz))));
+ const wrap=(s,mw,sz=SZ,f='A')=>{const out=[];let cur='';
+  s.split(/\s+/).filter(Boolean).forEach(w=>{
+   while(W(w,sz,f)>mw){let i=w.length-1;while(i>1&&W(w.slice(0,i),sz,f)>mw)i--;if(cur){out.push(cur);cur=''}out.push(w.slice(0,i));w=w.slice(i)}
+   const t=cur?cur+' '+w:w;if(!cur||W(t,sz,f)<=mw)cur=t;else{out.push(cur);cur=w}});
+  if(cur)out.push(cur);return out};
+ const segs=(x,yy,sg,sz,f)=>{let cx=x;sg.forEach(s=>{T(s.t,cx,yy,sz,f);const w=W(s.t,sz,f);if(s.s)B.line(cx,yy-sz*.3,cx+w,yy-sz*.3,.6);cx+=w});return cx-x};
+ /* paragraf rata kiri-kanan; kembalikan y berikutnya */
+ const para=(text,xl,xr,indent,y,LH)=>{
+  const words=text.split(/\s+/).filter(Boolean),lines=[];let cur=[];
+  const avail=()=>xr-xl-(lines.length?0:indent);
+  const lw=a=>a.reduce((t,w)=>t+W(w),0)+Math.max(0,a.length-1)*W(' ');
+  words.forEach(w=>{
+   while(W(w)>avail()){let i=w.length-1;while(i>1&&W(w.slice(0,i))>avail())i--;if(cur.length){lines.push(cur);cur=[]}lines.push([w.slice(0,i)]);w=w.slice(i)}
+   if(!cur.length||lw(cur.concat([w]))<=avail())cur.push(w);else{lines.push(cur);cur=[w]}});
+  if(cur.length)lines.push(cur);
+  lines.forEach((ln,i)=>{const x0=xl+(i?0:indent),aw=xr-x0,last=i===lines.length-1;
+   if(last||ln.length<2){T(ln.join(' '),x0,y)}
+   else{const sw=ln.reduce((t,w)=>t+W(w),0),gap=(aw-sw)/(ln.length-1);let cx=x0;ln.forEach(w=>{T(w,cx,y);cx+=W(w)+gap})}
+   y+=LH});
+  return y};
+ return{W,T,dots,dotsW,wrap,segs,para}}
+
+function lay1(B,V,b){
+ const SZ=b,LH=b*1.55,{W,T,dots,dotsW,wrap,segs,para}=tools(B,SZ);let y=40,over=false;
+ const R=PW-42,PL=100;
+ const ttl='SURAT PERMOHONAN PEMINDAHBUKUAN',ts=SZ*1.25,tw=B.w(ttl,ts,'AB'),tx=(PW-tw)/2;
+ B.text(ttl,tx,y,ts,'AB');B.line(tx,y+2,tx+tw,y+2,.8);y+=LH*2.2;
+ /* blok kiri & kanan */
+ const y0=y,xl=39,xc=100,xv=115,wv=180;let yl=y0;
+ [['Nomor',V.nomor],['Sifat',V.sifat],['Lampiran',V.lamp]].forEach(r=>{T(r[0],xl,yl);T(':',xc,yl);wrap(r[1]||dots(14),wv).forEach((s,i)=>T(s,xv,yl+i*LH));yl+=LH*Math.max(1,wrap(r[1]||dots(14),wv).length)});
+ T('Hal',xl,yl);T(':',xc,yl);const hal=wrap('Pemindahbukuan Pembayaran Pajak '+(V.pajak||dots(8)),wv);hal.forEach((s,i)=>T(s,xv,yl+i*LH));yl+=hal.length*LH;
+ const xr=353;let yr=y0;
+ T('Kepada :',xr,yr);yr+=LH;T('Yth.',xr-24,yr);
+ wrap('Kepala Unit Pelayanan Pemungutan Pajak Daerah',R-xr).forEach(s=>{T(s,xr,yr);yr+=LH});
+ [V.wil||dots(16),V.alm||dots(16)].forEach(v=>wrap(v,R-xr).forEach(s=>{T(s,xr,yr);yr+=LH}));
+ T('di',xr,yr);yr+=LH;T('tempat',xr+12,yr);yr+=LH;
+ y=Math.max(yl,yr)+LH*1.3;
+ T('Saya yang bertanda tangan dibawah ini selaku Wajib Pajak /Kuasa Wajib Pajak:',PL,y);y+=LH*1.4;
+ const lx=135,cx=231,vx=244,wm=R-vx;
+ const row=(l,v,min)=>{let a=wrap(v||dotsW(wm),wm);if(min)while(a.length<min)a.push(dotsW(wm));T(l,lx,y);T(':',cx,y);a.forEach((s,i)=>T(s,vx,y+i*LH));y+=a.length*LH};
+ row('Nama',V.nama);row('Alamat',V.alamat);row('NIK',V.nik);row('No. Telp/WA',V.telp);row('E-mail',V.email);
+ y+=LH*.9;
+ y=para('Dengan ini memohon agar dilakukan pemindahbukuan pembayaran Pajak PBB dengan alasan '+(V.alasan||dots(120)),PL,R,28,y,LH);
+ y+=LH*.4;
+ const blk=(tt,p)=>{
+  B.text(tt,PL,y,SZ,'AB');B.line(PL,y+2,PL+W(tt,SZ,'AB'),y+2,.7);y+=LH*1.25;
+  row('Nama Wajib Pajak',V[p+'nama']);row('NIK',V[p+'nik']);row('Alamat',V[p+'alamat'],2);row('NOP PBB-P2',V[p+'nop']||'31.XX.XXX.XXX.XXX.XXXX.X');
+  const sel=V[p+'js'];
+  T('Jenis Setoran',lx,y);T(':',cx,y);
+  const sg=[];JS.forEach((j,i)=>{if(i)sg.push({t:' / '});sg.push({t:j,s:!!sel&&sel!==j})});sg.push({t:' *'});segs(vx,y,sg,SZ,'A');y+=LH;
+  row('Tanggal Bayar',V[p+'tgl']);row('NTPD',V[p+'ntpd']);row('Kode Bayar',V[p+'kode']);row('Jumlah Bayar',V[p+'jml'])};
+ blk('Dari :','d_');y+=LH*.5;blk('Kepada :','k_');
+ y+=LH*.9;
+ y=para('Demikian Surat Permohonan ini dibuat dengan sebenar-benarnya dalam keadaan sehat dan sadar, dan digunakan sebagaimana mestinya.',PL,R,28,y,LH);
+ y+=LH*1.2;
+ T((V.kota||'Jakarta')+', '+(V.tgl||dots(34)),378,y);
+ y+=LH*4.6;
+ const nm='( '+(V.ttd||V.nama||dots(30))+' )';T(nm,403+(150-W(nm))/2-6,y);
+ if(y>PH-26)over=true;
+ return{over}}
+
+function lay2(B,V,b){
+ const SZ=b,LH=b*1.65,{W,T,dots,dotsW,wrap,para}=tools(B,SZ);let y=62,over=false;
+ const L=60,R=PW-42;
+ const ttl='SURAT PERNYATAAN',ts=SZ*1.25,tw=B.w(ttl,ts,'AB'),tx=(PW-tw)/2;
+ B.text(ttl,tx,y,ts,'AB');B.line(tx,y+2,tx+tw,y+2,.8);y+=LH*3;
+ T('Saya yang bertanda tangan dibawah ini selaku Wajib Pajak / Kuasa Wajib Pajak :',L,y);y+=LH*2;
+ const cx=200,vx=207,wm=R-vx;
+ const row=(l,v)=>{const a=wrap(v||dotsW(wm),wm);T(l,L,y);T(':',cx,y);a.forEach((s,i)=>T(s,vx,y+i*LH));y+=a.length*LH};
+ row('Nama lengkap',V.p_nama||V.nama);row('NIK KTP',V.p_nik||V.nik);row('NOP PBB-P2',V.p_nopd);row('Alamat',V.p_alamat||V.alamat);row('Jenis Pajak',V.p_pajak||V.pajak);row('Masa/Tahun Pajak',V.p_masa||(V.d_tgl?V.d_tgl.slice(-4):''));row('Jumlah Pembayaran',V.p_jml||V.d_jml);
+ y+=LH*1.3;
+ y=para('Dengan ini menyatakan bahwa belum pernah mengajukan permohonan pemindahbukuan terhadap kelebihan pembayaran pajak dimaksud. Apabila dikemudian hari berdasarkan hasil pemeriksaan ditemukan bukti/data/keadaan baru (novum) atau kesalahan atas permohonan yang diajukan, maka terhadap hasil tersebut saya bersedia untuk dibatalkan dan bertanggung jawab penuh untuk melakukan kewajibannya saya sesuai dengan ketentuan yang berlaku tanpa menuntut pihak manapun atau instansi yang terkait.',L,R,30,y,LH*.95);
+ y+=LH*.3;
+ y=para('Demikian Surat Pernyataan dibuat dengan sebenar-benarnya dalam keadaan sehat dan sadar, tanpa ada paksaan dari pihak manapun dan digunakan sebagaimana mestinya.',L,R,30,y,LH*.95);
+ y+=LH*2;
+ T((V.kota||'Jakarta')+', '+(V.tgl||dots(32)),336,y);y+=LH*1.9;
+ const cxm=405,C=(s,yy)=>T(s,cxm-W(s)/2,yy);
+ C('Materai',y);y+=LH*.95;C('Rp. 10.000',y);y+=LH*3.4;
+ C(V.ttd||V.nama||dots(46),y);
+ if(y>PH-26)over=true;
+ return{over}}
+
+function draw(B,p,V){
+ const lay=p?lay2:lay1,dry={text(){},w:B.w,line(){},rect(){},path(){}};let b=10.5;
+ for(;b>6.5;b-=.25){if(!lay(dry,V,b).over)break}
+ lay(B,V,b)}
+
+function pdfB(doc){const sf=f=>{doc.setFont(FJ[f][0],FJ[f][1])};return{
+ text(s,x,y,sz,f){sf(f);doc.setFontSize(sz);doc.text(s,x,y)},
+ w(s,sz,f){sf(f);doc.setFontSize(sz);return doc.getTextWidth(s)},
+ line(a,b,c,d,w){doc.setLineWidth(w);doc.line(a,b,c,d)},
+ rect(x,y,w,h,g){doc.setFillColor(g||0,g||0,g||0);doc.rect(x,y,w,h,'F');doc.setFillColor(0,0,0)},
+ path(pt,w,c){const sg=[];for(let i=1;i<pt.length;i++)sg.push([pt[i][0]-pt[i-1][0],pt[i][1]-pt[i-1][1]]);doc.setLineWidth(w);doc.setLineCap('round');doc.setLineJoin('round');doc.lines(sg,pt[0][0],pt[0][1],[1,1],'S',!!c);doc.setLineCap('butt');doc.setLineJoin('miter')},
+ img(){}}}
+function cvB(ctx,k){const ft=(sz,f)=>{ctx.font=(f.indexOf('I')>0?'italic ':'')+(f.indexOf('B')>0?'bold ':'')+(sz*k)+'px '+(f[0]==='T'?'"Times New Roman",Times,"Liberation Serif",serif':'Arial,Helvetica,"Liberation Sans",sans-serif')};return{
+ text(s,x,y,sz,f){ft(sz,f);ctx.fillText(s,x*k,y*k)},
+ w(s,sz,f){ft(sz,f);return ctx.measureText(s).width/k},
+ line(a,b,c,d,w){ctx.lineWidth=w*k;ctx.beginPath();ctx.moveTo(a*k,b*k);ctx.lineTo(c*k,d*k);ctx.stroke()},
+ path(pt,w,c){ctx.beginPath();pt.forEach((q,i)=>i?ctx.lineTo(q[0]*k,q[1]*k):ctx.moveTo(q[0]*k,q[1]*k));if(c)ctx.closePath();ctx.lineWidth=w*k;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();ctx.lineJoin='miter';ctx.lineCap='butt'},
+ rect(x,y,w,h,g){ctx.fillStyle=g?'rgb('+g+','+g+','+g+')':'#000';ctx.fillRect(x*k,y*k,w*k,h*k);ctx.fillStyle='#000'},
+ img(){}}}
+let Z=1;const PXW=PW*96/72;
+function zoomTo(z){Z=Math.max(.3,Math.min(3,z));const w=$('pvin');w.style.transform='scale('+Z+')';
+ const s=$('pvsize');s.style.width=Math.round(PXW*Z)+'px';s.style.height=Math.round(w.offsetHeight*Z)+'px';$('zl').textContent=Math.round(Z*100)+'%'}
+function fit(){zoomTo(Math.min(1,($('pvbody').clientWidth-32)/PXW))}
+async function tampil(){const w=$('pvin');w.innerHTML='';const V=vals();const k=PXW/PW*2;
+ for(let p=0;p<2;p++){
+  const cv=document.createElement('canvas');cv.width=Math.round(PW*k);cv.height=Math.round(PH*k);cv.style.cssText='display:block;width:'+PXW+'px;height:'+(PH*96/72)+'px;background:#fff;margin:0 0 14px;box-shadow:0 2px 12px #0006';
+  const c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,cv.width,cv.height);c.fillStyle='#000';c.strokeStyle='#000';c.textBaseline='alphabetic';c.lineCap='butt';draw(cvB(c,k),p,V);w.appendChild(cv)}
+ $('pv').classList.add('on');document.body.style.overflow='hidden';fit();$('pvbody').scrollTop=0}
+function tutup(){$('pv').classList.remove('on');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')tutup()});
+function nama(){const m=(vals().nama||'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,'');return 'Surat_Permohonan_Pemindahbukuan'+(m?'_'+m:'')+'.pdf'}
+async function kirim(blob,fn){
+ let d=null;try{d=window.claude&&await claude.use('downloads')}catch(e){}
+ if(d){try{await d.save({filename:fn,data:blob})}catch(e){if(!e||e.code!=='declined')alert('PDF tidak dapat disimpan di sini.')}return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+async function simpanPDF(){
+ const J=window.jspdf&&window.jspdf.jsPDF;if(!J){alert('Pustaka PDF belum termuat. Periksa koneksi lalu coba lagi.');return}
+ const btn=$('bpdf'),t=btn.textContent;btn.disabled=true;btn.textContent='Menyiapkan…';
+ try{const V=vals(),doc=new J({unit:'pt',format:[PW,PH],orientation:'portrait',compress:true});
+  doc.setDrawColor(0);doc.setFillColor(0);doc.setTextColor(0);doc.setProperties({title:'Surat Permohonan Pemindahbukuan'});
+  draw(pdfB(doc),0,V);doc.addPage([PW,PH]);doc.setDrawColor(0);doc.setFillColor(0);doc.setTextColor(0);draw(pdfB(doc),1,V);
+  await kirim(doc.output('blob'),nama())}
+ catch(e){alert('PDF gagal dibuat.')}
+ finally{btn.disabled=false;btn.textContent=t}}
+build();defaults();
+</script>
+</body>
+</html>

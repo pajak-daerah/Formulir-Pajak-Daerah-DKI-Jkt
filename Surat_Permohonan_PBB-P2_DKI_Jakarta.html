@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Surat Permohonan PBB-P2 DKI Jakarta</title>
+<style>
+:root{--bg:#eef1f5;--paper:#fff;--ink:#111;--line:#222;--acc:#0f4c81;--mut:#5b6572;--fld:#e6d9f7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--mut:#9aa6b4;--acc:#6db3f2}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:14px/1.4 Arial,Helvetica,sans-serif;color:var(--ink)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:var(--acc);color:#fff}
+.bar b{flex:1;min-width:180px}
+.bar button{border:0;border-radius:6px;padding:8px 14px;font-weight:700;cursor:pointer;background:#fff;color:#0f4c81}
+.wrap{overflow-x:auto;padding:14px}
+.paper{width:820px;margin:0 auto;background:#fff;color:#111;border:1px solid #bbb;padding:18px 22px;box-shadow:0 2px 10px #0002}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #000;padding:3px 5px;vertical-align:top;font-weight:400}
+.sec{background:#fff;font-weight:700;padding:3px 5px;border:1px solid #000;border-top:0}
+.sec.f{border-top:1px solid #000}
+input,textarea,select{font:inherit;color:#111;color-scheme:light;background:var(--fld);border:0;border-bottom:1px dotted #888;padding:2px 4px;width:100%;outline:0;display:block}
+select option,select optgroup{background:#fff;color:#111}
+textarea{resize:vertical;min-height:44px}
+input:focus,textarea:focus,select:focus{background:#d6c2f0}
+.ck{display:flex;align-items:center;gap:6px;cursor:pointer}
+.ck input{display:inline-block;width:auto;margin:0}
+.id td{border:0;padding:2px 4px}.id td:first-child{width:150px}.id td:nth-child(2){width:12px}
+.warn{color:#c00000;font-weight:700;font-style:italic}
+.judul{margin:14px 0 8px;font-weight:700;text-align:center}
+.note{color:var(--mut);font-size:12px;max-width:820px;margin:8px auto}
+@media print{
+ :root{padding:0}body{background:#fff}.bar,.note{display:none}.wrap{padding:0;overflow:visible}
+ .paper{border:0;box-shadow:none;width:100%;padding:0}
+ input,textarea,select{background:transparent!important;color:#111!important;border-bottom:0}
+ @page{size:A4;margin:12mm}
+}
+#pv{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;background:#2b2f36}
+#pv.on{display:flex}
+.pvbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:var(--acc);color:#fff}
+.pvbar b{flex:1;min-width:120px}
+.pvbar button{border:0;border-radius:6px;padding:8px 12px;min-width:38px;font-weight:700;cursor:pointer;background:#fff;color:#0f4c81}
+.pvbar span{min-width:48px;text-align:center;font-weight:700}
+.pvbody{flex:1;overflow:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.pvsize{margin:0 auto;position:relative}
+.pvin{width:794px;transform-origin:0 0}
+@media print{#pv{display:none!important}}
+</style>
+</head>
+<body>
+<div class="bar"><b>Surat Permohonan PBB-P2 DKI Jakarta – Formulir Pengisian</b>
+<button onclick="tampil()">Tampilkan</button><button onclick="reset()">Kosongkan</button><button id="bpdf" onclick="simpanPDF()">Simpan PDF</button></div>
+<div class="wrap"><div class="paper" id="f"></div></div>
+<p class="note">Isi langsung pada formulir. Tanda tangan pemohon dibubuhkan setelah dicetak. Klik “Tampilkan” untuk melihat hasilnya (bisa di-zoom) dan “Simpan PDF” untuk menyimpannya sebagai PDF.</p>
+<div id="pv" role="dialog" aria-label="Pratinjau"><div class="pvbar"><b>Pratinjau</b><button onclick="zoomTo(Z-.1)" aria-label="Perkecil">−</button><span id="zl">100%</span><button onclick="zoomTo(Z+.1)" aria-label="Perbesar">+</button><button onclick="fit()">Pas</button><button onclick="zoomTo(1)">100%</button><button onclick="simpanPDF()">Simpan PDF</button><button onclick="tutup()">Tutup</button></div><div class="pvbody" id="pvbody"><div class="pvsize" id="pvsize"><div class="pvin" id="pvin"></div></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const PW=595.28,PH=841.89; /* A4 */
+const FJ={A:['helvetica','normal'],AB:['helvetica','bold'],AI:['helvetica','italic'],T:['times','normal'],TB:['times','bold']};
+const SUB=[['nama','Nama'],['jalan','Nama Jalan'],['blok','Blok / Kav / Nomor'],['rt','RT / RW'],['kel','Kelurahan'],['kec','Kecamatan'],['kota','Kota']];
+const OBJ=[['jalan','Nama Jalan'],['blok','Blok / Kav / Nomor'],['rt','RT / RW'],['lt','Luas Tanah (M2)'],['lb','Luas Bangunan (M2)'],['jb','Jenis Bangunan']];
+const CB=[['pb','Pendaftaran Baru'],['pn','Pembetulan nama'],['fs','Perubahan Status Menjadi','sel'],['bn','Balik nama'],['pa','Pembetulan Alamat'],['bt','Pembatalan SPPT PBB Tahun','txt','Tahun'],['pg','Penggabungan'],['lt','Perubahan Luas Tanah'],['sb','Perubahan status bangunan menjadi','txt','Menjadi'],['hn','Penghapusan NOP'],['lb','Perubahan Luas Bangunan'],['sl','Salinan Tahun','txt','Tahun']];
+const KA=['Jakarta Pusat','Jakarta Utara','Jakarta Barat','Jakarta Selatan','Jakarta Timur'];
+const UP=[['Jakarta Pusat',['Gambir','Tanah Abang','Menteng','Senen','Cempaka Putih','Johar Baru','Kemayoran','Sawah Besar']],['Jakarta Utara',['Penjaringan','Tanjung Priok','Pademangan','Koja','Cilincing','Kelapa Gading']],['Jakarta Barat',['Cengkareng','Grogol Petamburan','Kalideres','Kebon Jeruk','Kembangan','Palmerah','Taman Sari','Tambora']],['Jakarta Selatan',['Kebayoran Baru','Kebayoran Lama','Pesanggrahan','Cilandak','Pasar Minggu','Jagakarsa','Mampang Prapatan','Pancoran','Tebet','Setiabudi']],['Jakarta Timur',['Matraman','Pulo Gadung','Jatinegara','Duren Sawit','Kramat Jati','Makasar','Pasar Rebo','Ciracas','Cipayung','Cakung']]];
+const JB=[['Rumah',['1a. Rumah Tinggal','1b. Rumah Dikontrakkan','1c. Rumah Kos / Guesthouse','1d. Rumah Tinggal yang juga digunakan sebagai Tempat Usaha']],['Perkantoran / Universitas',['2a. Perkantoran Swasta','2b. Perkantoran BUMN / BUMD','2c. Universitas Negeri','2d. Universitas Swasta / Sejenis','2e. Mixed Use']],['Toko / Ruko / Rukan / dll',['4a. Toko / Kios / Apotek / Bengkel Motor','4b. Ruko / Rukan','4c. Restoran / Kafe','4d. Ruko / Rukan yang digunakan sepenuhnya menjadi tempat tinggal']],['Rumah Sakit / Klinik',['5a. Rumah Sakit Pemerintah','5b. Rumah Sakit Swasta','5c. Klinik / Sejenis','5d. Laboratorium Klinik']],'3. Pabrik','4. Gymnasium','5. Gedung Pemerintah','6. Lain-Lain',['Hotel',['7a. Hotel','7b. Wisma','7c. Asrama / Mess','7d. Motel / Losmen / Hostel / Sejenis']],['Bengkel / Gudang / Pertanian / Peternakan',['8a. Bengkel / Showroom Mobil','8b. Gudang','8c. Bangunan Pertanian / Peternakan','8d. Workshop']],['Bangunan Tidak Kena Pajak',['11a. Rumah Ibadat','11b. Kedutaan']],'12. Bangunan Parkir',['Rumah Susun',['13a. Rumah Susun / Apartemen','13b. Kondominium / Kondotel / Apartemen Sewa / Flat','13c. Rusunawa','13d. Rumah Susun Mixed Use']],'14. Kanopi Pompa Bensin','15. Tangki Minyak / Tangki',['Gedung Sekolah',['16a. Gedung Sekolah Negeri','16b. Gedung Sekolah Swasta']],['Objek Khusus',['17a. Jalan Tol','17b. Bandar Udara / Lapangan Terbang','17c. Stasiun Kereta Api / LRT / MRT','17d. Bendungan','17e. Pelabuhan / Dermaga / Galangan Kapal / Jetty','17f. Lapangan Golf','17g. Stadion','17h. Sirkuit Balap','17i. Pabrik Semen / Pupuk','17j. Tempat Rekreasi','17k. Tempat Penampungan / Kilang Minyak, Air, atau Gas','17l. Pipa Minyak, Air, atau Gas','17m. Stasiun Pengisian Bahan Bakar / SPKLU','17n. Menara / SUTET / SUTT','17o. Objek Khusus Lainnya','17p. Terminal Bus / Halte','17q. Tempat Parkir Kontainer / Alat Berat','17r. Pusat Perbelanjaan / Mall / Sejenis','17s. Pasar / Swalayan','17t. Hanggar']]];
+const nn=t=>t.replace(/^\d+[a-z]?\.\s*/,'');
+const ids=()=>[...document.querySelectorAll('#f input,#f textarea,#f select')];
+
+/* ---------- formulir ---------- */
+const opt=a=>a.map(g=>typeof g==='string'?'<option>'+g+'</option>':'<optgroup label="'+g[0]+'">'+g[1].map(n=>'<option>'+n+'</option>').join('')+'</optgroup>').join('');
+const SEL=(id,o,ne)=>'<select id="'+id+'">'+(ne?'':'<option value="">— Pilih —</option>')+o+'</select>';
+const I=(id,x)=>'<input id="'+id+'" '+(x||'')+'>';
+const TA=id=>'<textarea id="'+id+'" rows="2"></textarea>';
+const R=(l,c)=>'<tr><td>'+l+'</td><td>:</td><td>'+c+'</td></tr>';
+const SEC=(t,f)=>'<div class="sec'+(f?' f':'')+'">'+t+'</div>';
+const TB=r=>'<table class="id" style="border:1px solid #000;border-top:0">'+r+'</table>';
+const HD=(t,cls)=>'<tr><td colspan="3"'+(cls?' class="'+cls+'"':'')+'><b>'+t+'</b></td></tr>';
+const JBO=opt(JB.map(g=>typeof g==='string'?nn(g):[g[0],g[1].map(nn)]));
+const flds=(list,pre)=>list.map(r=>R(r[1],r[0]==='jb'?SEL(pre+'jb',JBO):I(pre+r[0]))).join('');
+function build(){
+ let h='<div class="judul">SURAT PERMOHONAN PBB-P2</div>';
+ h+=SEC('Surat',1)+TB(R('Wilayah UPPPD',SEL('upp',opt(UP)))+R('Kota administrasi',SEL('adm',opt(KA)))+R('Tanggal',I('tgl','type="date" style="width:170px"')));
+ h+=SEC('Wajib pajak (pemohon)')+TB(R('Nama',I('nama'))+R('No. KTP',I('ktp','inputmode="numeric" maxlength="16"'))+R('No. Telp',I('telp','type="tel"'))+R('No. HP',I('hp','type="tel"'))+R('Nama penandatangan',I('ttd','placeholder="kosong = nama pemohon"')));
+ h+=SEC('Jenis permohonan')+TB(CB.map(c=>{
+  let ex='';if(c[2]==='sel')ex=SEL('x_fs',opt(['Fasum','Non Fasum']),1);else if(c[2]==='txt')ex=I('x_'+c[0],'placeholder="'+c[3]+'"');
+  return '<tr><td colspan="2" style="width:300px"><label class="ck"><input type="checkbox" id="c_'+c[0]+'">'+c[1]+'</label></td><td>'+ex+'</td></tr>'}).join(''));
+ h+=SEC('Permohonan lainnya (opsional)')+TB('<tr><td colspan="3">'+TA('lain')+'</td></tr>');
+ h+=SEC('Objek pajak')+TB(R('NOP (18 digit)',I('nop','inputmode="numeric" placeholder="00.00.000.000.000-0000.0"'))+R('Atas Nama',I('an'))+R('Yang berlokasi di',TA('lokasi')));
+ h+=SEC('Data SPPT PBB saat ini')+TB(HD('Isi data sebelum perubahan','warn')+R('Tahun SPPT',I('tahun','inputmode="numeric" maxlength="4" style="width:120px"'))+HD('Data subjek pajak')+flds(SUB,'as_')+HD('Data objek pajak')+flds(OBJ,'ao_'));
+ h+=SEC('Perubahan data menurut pemohon')+TB(HD('Isi data yang mengalami perubahan saja','warn')+R('Data subjek sesuai',SEL('ident',opt(['KTP','NPWP Badan']),1))+HD('Data subjek pajak menjadi')+flds(SUB,'bs_')+HD('Data objek pajak menjadi')+flds(OBJ,'bo_'));
+ h+=SEC('Alasan pengajuan permohonan')+TB('<tr><td colspan="3">'+TA('alasan')+'</td></tr>');
+ $('f').innerHTML=h}
+function today(){const t=new Date();return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')}
+function defaults(){ids().forEach(x=>{if(x.type==='checkbox')x.checked=false;else if(x.tagName==='SELECT')x.selectedIndex=0;else x.value=''});$('tgl').value=today()}
+function reset(){if(confirm('Kosongkan semua isian?'))defaults()}
+function fmtNop(s){const d=s.replace(/\D/g,'').slice(0,18),p=[2,2,3,3,3,4,1],o=[];let i=0;
+ p.forEach(n=>{const c=d.substr(i,n);i+=n;if(c)o.push(c)});
+ return o.length>=6?o.slice(0,5).join('.')+'-'+o[5]+(o[6]?'.'+o[6]:''):o.join('.')}
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.id==='nop')t.value=fmtNop(t.value);
+ if(t.id==='ktp')t.value=t.value.replace(/\D/g,'')});
+function vals(){const V={};ids().forEach(x=>{if(!x.id)return;
+ if(x.type==='checkbox'){V[x.id]=x.checked;return}
+ let v=x.value.replace(/\s+/g,' ').trim();
+ if(v&&x.type==='date'){const d=new Date(v+'T00:00:00');v=d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}
+ V[x.id]=v});V.kota='Jakarta';return V}
+
+/* ---------- tata letak surat (A4) ---------- */
+function lay(B,V,b){
+ const L=40,R=PW-40,CW=R-L,SZ=b,LH=b*1.34;let y=38,over=false;
+ const W=(s,sz=SZ,f='A')=>B.w(s,sz,f);
+ const T=(s,x,yy,sz=SZ,f='A')=>B.text(s,x,yy,sz,f);
+ const dots=n=>'.'.repeat(n);
+ const wrap=(s,mw,sz=SZ,f='A')=>{const out=[];let cur='';
+  s.split(/\s+/).filter(Boolean).forEach(w=>{
+   while(W(w,sz,f)>mw){let i=w.length-1;while(i>1&&W(w.slice(0,i),sz,f)>mw)i--;if(cur){out.push(cur);cur=''}out.push(w.slice(0,i));w=w.slice(i)}
+   const t=cur?cur+' '+w:w;if(!cur||W(t,sz,f)<=mw)cur=t;else{out.push(cur);cur=w}});
+  if(cur)out.push(cur);return out};
+ const segW=(segs,sz,f)=>segs.reduce((a,s)=>a+W(s.t,sz,f),0);
+ const segs=(x,yy,sg,sz,f)=>{let cx=x;sg.forEach(s=>{T(s.t,cx,yy,sz,f);const w=W(s.t,sz,f);if(s.s)B.line(cx,yy-sz*.3,cx+w,yy-sz*.3,.6);cx+=w});return cx-x};
+ const C=(s,cx,yy,sz=SZ,f='A')=>T(s,cx-W(s,sz,f)/2,yy,sz,f);
+
+ const xk=L+CW/2+6;
+ const tt=(V.kota||dots(16))+', '+(V.tgl||dots(14));T(tt,xk,y);y+=LH*1.7;
+ T('Kepada :',xk,y);y+=LH;
+ wrap('Yth. Kepala Unit Pelayanan Pemungutan Pajak Daerah '+(V.upp||dots(14))+' di '+(V.adm||dots(16)),R-xk).forEach(s=>{T(s,xk,y);y+=LH});
+ y+=LH*.5;
+ T('Saya yang bertanda tangan dibawah ini :',L,y);y+=LH*1.1;
+ const colW=CW/2-6,lw=58,xr=L+CW/2+6;
+ const pr=(l1,v1,l2,v2)=>{const a=wrap(v1||dots(20),colW-lw-8),c=wrap(v2||dots(20),colW-lw-8),n=Math.max(a.length,c.length);
+  T(l1,L,y);T(':',L+lw,y);a.forEach((s,i)=>T(s,L+lw+8,y+i*LH));
+  T(l2,xr,y);T(':',xr+lw,y);c.forEach((s,i)=>T(s,xr+lw+8,y+i*LH));y+=n*LH};
+ pr('Nama',V.nama,'No. Telp',V.telp);pr('No. KTP',V.ktp,'No. HP',V.hp);
+ y+=LH*.5;
+ T('adalah sebagai Wajib Pajak / Kuasanya dengan ini mengajukan permohonan :',L,y);y+=LH*1.3;
+
+ /* kotak centang, 3 kolom */
+ const bw=SZ*.85;
+ const items=CB.map(c=>{let sg=[{t:c[1]}];
+  if(c[2]==='sel')sg=[{t:c[1]+' '},{t:'Fasum',s:V.x_fs!=='Fasum'},{t:' / '},{t:'Non Fasum',s:V.x_fs!=='Non Fasum'},{t:' *)'}];
+  else if(c[2]==='txt')sg=[{t:c[1]+' '},{t:V['x_'+c[0]]||'. . . . . . .'}];
+  return{id:c[0],sg,w:bw+4+segW(sg,SZ,'A')}});
+ const cw=[0,1,2].map(k=>Math.max(...items.filter((_,i)=>i%3===k).map(a=>a.w)));
+ const gx=12;if(cw[0]+cw[1]+cw[2]+2*gx>CW)over=true;
+ const xs3=[L,L+cw[0]+gx,L+cw[0]+cw[1]+2*gx];
+ for(let r=0;r<4;r++){
+  items.slice(r*3,r*3+3).forEach((it,k)=>{const x=xs3[k],t=y-bw+1;
+   B.line(x,t,x+bw,t,.6);B.line(x,t+bw,x+bw,t+bw,.6);B.line(x,t,x,t+bw,.6);B.line(x+bw,t,x+bw,t+bw,.6);
+   if(V['c_'+it.id]){B.line(x+1.5,t+1.5,x+bw-1.5,t+bw-1.5,1.1);B.line(x+bw-1.5,t+1.5,x+1.5,t+bw-1.5,1.1)}
+   segs(x+bw+4,y,it.sg,SZ,'A')});
+  y+=LH*1.3}
+ y+=LH*.2;
+ const ll=V.lain?wrap(V.lain,CW):[''];
+ ll.forEach(s=>{if(s)T(s,L,y);B.line(L,y+2,R,y+2,.3);y+=LH*1.15});
+ y+=LH*.4;
+ const lv=(l,v)=>{const l2=80,a=wrap(v,CW-l2-8);T(l,L,y);T(':',L+l2,y);a.forEach((s,i)=>T(s,L+l2+8,y+i*LH));y+=a.length*LH};
+ lv('Atas NOP',V.nop||dots(24));lv('Atas Nama',V.an||dots(24));
+ lv('Yang berlokasi',(V.lokasi||dots(24))+' Kecamatan '+(V.upp||dots(12))+' '+(V.adm||dots(12)));
+ y+=LH*.6;
+
+ /* tabel */
+ const TS=SZ*.92,TL=LH*.95,pad=3,c0=96,c1=(CW-c0)/2,xs=[L,L+c0,L+c0+c1,R];
+ const rowT=(cells,o)=>{o=o||{};const f=o.bold?'AB':'A';
+  const ls=cells.map((t,i)=>Array.isArray(t)?t:wrap(t||'',xs[i+1]-xs[i]-2*pad,TS,f).map(s=>[{t:s}]));
+  const n=Math.max(1,...ls.map(a=>a.length));
+  const h=Math.max(n*TL+2*pad,TS*1.3+2*pad+3,o.minH||0);
+  if(o.gray)B.rect(L,y,CW,h,235);
+  B.line(o.nt0?xs[1]:L,y,R,y,.6);B.line(o.nb0?xs[1]:L,y+h,R,y+h,.6);xs.forEach(x=>B.line(x,y,x,y+h,.6));
+  ls.forEach((lines,i)=>lines.forEach((sg,k)=>{const w=segW(sg,TS,f),x=o.center?xs[i]+(xs[i+1]-xs[i]-w)/2:xs[i]+pad;const off=o.center?(h-2*pad-lines.length*TL)/2:0;segs(x,y+pad+off+TS*.82+k*TL,sg,TS,f)}));
+  y+=h};
+ const icon=(ya,yb)=>{const H=yb-ya;
+  B.rect(L+.3,ya,c0-.3,H,255);
+  B.line(L,ya,xs[1],ya,.6);B.line(L,yb,xs[1],yb,.6);B.line(L,ya,L,yb,.6);B.line(xs[1],ya,xs[1],yb,.6);
+  const S=H-8,k=S/359,ox=L+c0/2-155*k,oy=ya+4,M=q=>[ox+q[0]*k,oy+q[1]*k],lw=Math.max(1.2,.05*S);
+  const bez=(a,c,e,n)=>{const o=[];for(let i=0;i<=n;i++){const t=i/n,u=1-t;o.push([u*u*a[0]+2*u*t*c[0]+t*t*e[0],u*u*a[1]+2*u*t*c[1]+t*t*e[1]])}return o};
+  const head=[];for(let i=0;i<=40;i++){const a=Math.PI+i/40*Math.PI;head.push([155+72*Math.cos(a),100+82*Math.sin(a)])}
+  for(let i=1;i<40;i++){const a=i/40*Math.PI;head.push([155+72*Math.cos(a),100+100*Math.sin(a)])}
+  const ls=bez([112,214],[16,230],[10,335],14),rs=ls.map(q=>[310-q[0],q[1]]),col=[];
+  for(let i=0;i<=12;i++){const t=i/12;col.push([198-86*t,214+24*Math.sin(Math.PI*t)])}
+  B.path(head.map(M),lw,true);
+  B.path(ls.concat(rs.slice().reverse(),col).map(M),lw,true);
+  B.path([[112,214],[108,176]].map(M),lw);B.path([[198,214],[202,176]].map(M),lw)};
+ const house=(ya,yb)=>{B.rect(L+.3,ya,c0-.3,yb-ya,255);
+  B.line(L,ya,xs[1],ya,.6);B.line(L,yb,xs[1],yb,.6);B.line(L,ya,L,yb,.6);B.line(xs[1],ya,xs[1],yb,.6);
+  const S=yb-ya-8,k=S/170,ox=L+c0/2-97*k,oy=ya+4,M=q=>[ox+q[0]*k,oy+q[1]*k],lw=Math.max(1.1,.05*S);
+  B.path([[8,92],[97,10],[186,92]].map(M),lw);
+  B.path([[36,66],[36,24],[58,24],[58,46]].map(M),lw);
+  B.path([[26,82],[26,150],[168,150],[168,82]].map(M),lw);
+  B.path([[6,158],[188,158]].map(M),lw);B.path([[14,166],[180,166]].map(M),lw);
+  B.path([[80,52],[112,52],[112,82],[80,82]].map(M),lw,true);
+  B.path([[116,100],[152,100],[152,136],[116,136]].map(M),lw,true);B.path([[134,100],[134,136]].map(M),lw);
+  B.path([[44,104],[72,104],[72,150],[44,150]].map(M),lw,true);B.path([[52,128],[64,128]].map(M),lw)};
+ const sj=V.ident==='NPWP Badan'?'NPWP Badan':'KTP';
+ const yA=y;
+ rowT(['','DATA SPPT PBB TAHUN '+(V.tahun||'....'),'PERUBAHAN DATA SPPT PBB MENURUT PEMOHON'],{center:1,bold:1,nb0:1});
+ rowT(['','DATA SUBJEK PAJAK (SEBELUMNYA)',[[{t:'Data Subjek Pajak sesuai'}],[{t:'KTP',s:sj!=='KTP'},{t:' / '},{t:'NPWP Badan',s:sj!=='NPWP Badan'},{t:' *) menjadi'}]]],{gray:1,bold:1,center:1,nt0:1});
+ icon(yA,y);
+ SUB.forEach(r=>rowT([r[1],V['as_'+r[0]]||'',V['bs_'+r[0]]||'']));
+ const yO=y;
+ rowT(['','DATA OBJEK PAJAK (SEBELUMNYA)','Berdasar Sertifikat / Surat Tanah / Data pendukung lainnya menjadi'],{gray:1,bold:1,center:1,minH:46});
+ house(yO,y);
+ OBJ.forEach(r=>rowT([r[1],V['ao_'+r[0]]||'',V['bo_'+r[0]]||'']));
+ y+=LH*1.1;
+
+ T('Alasan pengajuan permohonan adalah :',L,y,SZ,'AB');y+=LH*1.15;
+ const al=V.alasan?wrap(V.alasan,CW):[''];while(al.length<2)al.push('');
+ al.forEach(s=>{if(s)T(s,L,y);B.line(L,y+2,R,y+2,.3);y+=LH*1.15});
+ y+=LH*.5;
+ wrap('Dan apabila diperlukan saya menyatakan bersedia untuk dilakukan pemeriksaan lapangan.',CW).forEach(s=>{T(s,L,y);y+=LH});
+ y+=LH*.6;
+ const cx=R-90;
+ C('WAJIB PAJAK / KUASANYA',cx,y);
+ const ny=y+LH+34;
+ C('( '+(V.ttd||V.nama||dots(24))+' )',cx,ny);
+ T('*) Coret yang tidak perlu',L,ny,SZ*.85);
+ if(ny+LH>PH-30)over=true;
+ return{over}}
+function draw(B,p,V){
+ const dry={text(){},w:B.w,line(){},rect(){},path(){}};let b=10.5;
+ for(;b>6.5;b-=.25){if(!lay(dry,V,b).over)break}
+ lay(B,V,b)}
+
+function pdfB(doc){const sf=f=>{doc.setFont(FJ[f][0],FJ[f][1])};return{
+ text(s,x,y,sz,f){sf(f);doc.setFontSize(sz);doc.text(s,x,y)},
+ w(s,sz,f){sf(f);doc.setFontSize(sz);return doc.getTextWidth(s)},
+ line(a,b,c,d,w){doc.setLineWidth(w);doc.line(a,b,c,d)},
+ rect(x,y,w,h,g){doc.setFillColor(g||0,g||0,g||0);doc.rect(x,y,w,h,'F');doc.setFillColor(0,0,0)},
+ path(pt,w,c){const sg=[];for(let i=1;i<pt.length;i++)sg.push([pt[i][0]-pt[i-1][0],pt[i][1]-pt[i-1][1]]);doc.setLineWidth(w);doc.setLineCap('round');doc.setLineJoin('round');doc.lines(sg,pt[0][0],pt[0][1],[1,1],'S',!!c);doc.setLineCap('butt');doc.setLineJoin('miter')},
+ img(){}}}
+function cvB(ctx,k){const ft=(sz,f)=>{ctx.font=(f.indexOf('I')>0?'italic ':'')+(f.indexOf('B')>0?'bold ':'')+(sz*k)+'px '+(f[0]==='T'?'"Times New Roman",Times,"Liberation Serif",serif':'Arial,Helvetica,"Liberation Sans",sans-serif')};return{
+ text(s,x,y,sz,f){ft(sz,f);ctx.fillText(s,x*k,y*k)},
+ w(s,sz,f){ft(sz,f);return ctx.measureText(s).width/k},
+ line(a,b,c,d,w){ctx.lineWidth=w*k;ctx.beginPath();ctx.moveTo(a*k,b*k);ctx.lineTo(c*k,d*k);ctx.stroke()},
+ path(pt,w,c){ctx.beginPath();pt.forEach((q,i)=>i?ctx.lineTo(q[0]*k,q[1]*k):ctx.moveTo(q[0]*k,q[1]*k));if(c)ctx.closePath();ctx.lineWidth=w*k;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();ctx.lineJoin='miter';ctx.lineCap='butt'},
+ rect(x,y,w,h,g){ctx.fillStyle=g?'rgb('+g+','+g+','+g+')':'#000';ctx.fillRect(x*k,y*k,w*k,h*k);ctx.fillStyle='#000'},
+ img(){}}}
+let Z=1;const PXW=PW*96/72;
+function zoomTo(z){Z=Math.max(.3,Math.min(3,z));const w=$('pvin');w.style.transform='scale('+Z+')';
+ const s=$('pvsize');s.style.width=Math.round(PXW*Z)+'px';s.style.height=Math.round(w.offsetHeight*Z)+'px';$('zl').textContent=Math.round(Z*100)+'%'}
+function fit(){zoomTo(Math.min(1,($('pvbody').clientWidth-32)/PXW))}
+async function tampil(){const w=$('pvin');w.innerHTML='';const V=vals();const k=PXW/PW*2;
+ const cv=document.createElement('canvas');cv.width=Math.round(PW*k);cv.height=Math.round(PH*k);cv.style.cssText='display:block;width:'+PXW+'px;height:'+(PH*96/72)+'px;background:#fff;margin:0 0 14px;box-shadow:0 2px 12px #0006';
+ const c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,cv.width,cv.height);c.fillStyle='#000';c.strokeStyle='#000';c.textBaseline='alphabetic';c.lineCap='butt';draw(cvB(c,k),0,V);w.appendChild(cv);
+ $('pv').classList.add('on');document.body.style.overflow='hidden';fit();$('pvbody').scrollTop=0}
+function tutup(){$('pv').classList.remove('on');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')tutup()});
+function nama(){const m=($('nama').value||'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,'');return 'Surat_Permohonan_PBB'+(m?'_'+m:'')+'.pdf'}
+async function kirim(blob,fn){
+ let d=null;try{d=window.claude&&await claude.use('downloads')}catch(e){}
+ if(d){try{await d.save({filename:fn,data:blob})}catch(e){if(!e||e.code!=='declined')alert('PDF tidak dapat disimpan di sini.')}return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+async function simpanPDF(){
+ const J=window.jspdf&&window.jspdf.jsPDF;if(!J){alert('Pustaka PDF belum termuat. Periksa koneksi lalu coba lagi.');return}
+ const btn=$('bpdf'),t=btn.textContent;btn.disabled=true;btn.textContent='Menyiapkan…';
+ try{const V=vals(),doc=new J({unit:'pt',format:[PW,PH],orientation:'portrait',compress:true});
+  doc.setDrawColor(0);doc.setFillColor(0);doc.setTextColor(0);doc.setProperties({title:'Surat Permohonan PBB-P2'});
+  draw(pdfB(doc),0,V);
+  await kirim(doc.output('blob'),nama())}
+ catch(e){alert('PDF gagal dibuat.')}
+ finally{btn.disabled=false;btn.textContent=t}}
+build();defaults();
+$('upp').addEventListener('change',()=>{const o=$('upp').selectedOptions[0],g=o&&o.parentElement&&o.parentElement.tagName==='OPTGROUP'?o.parentElement.label:'';$('adm').value=g});
+</script>
+</body>
+</html>

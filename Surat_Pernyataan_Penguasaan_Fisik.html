@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Surat Pernyataan Penguasaan Fisik</title>
+<style>
+:root{--bg:#eef1f5;--paper:#fff;--ink:#111;--line:#222;--acc:#0f4c81;--mut:#5b6572;--fld:#e6d9f7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--mut:#9aa6b4;--acc:#6db3f2}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:14px/1.4 Arial,Helvetica,sans-serif;color:var(--ink)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:var(--acc);color:#fff}
+.bar b{flex:1;min-width:180px}
+.bar button{border:0;border-radius:6px;padding:8px 14px;font-weight:700;cursor:pointer;background:#fff;color:#0f4c81}
+.wrap{overflow-x:auto;padding:14px}
+.paper{width:820px;margin:0 auto;background:#fff;color:#111;border:1px solid #bbb;padding:18px 22px;box-shadow:0 2px 10px #0002}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #000;padding:3px 5px;vertical-align:top;font-weight:400}
+.sec{background:#fff;font-weight:700;padding:3px 5px;border:1px solid #000;border-top:0}
+.sec.f{border-top:1px solid #000}
+input,textarea{font:inherit;color:#111;color-scheme:light;background:var(--fld);border:0;border-bottom:1px dotted #888;padding:2px 4px;width:100%;outline:0}
+input:focus{background:#d6c2f0}
+.id td{border:0;padding:2px 4px}.id td:first-child{width:150px}.id td:nth-child(2){width:12px}
+.c{text-align:center}
+.lamp{margin-left:50%;font-size:12px;line-height:1.5;margin-top:4px;text-transform:uppercase}
+.judul{margin:14px 0 8px;font-weight:700;text-align:center}
+.note{color:var(--mut);font-size:12px;max-width:820px;margin:8px auto}
+@media print{
+ :root{padding:0}body{background:#fff}.bar,.note{display:none}.wrap{padding:0;overflow:visible}
+ .paper{border:0;box-shadow:none;width:100%;padding:0}
+ input{background:transparent!important;color:#111!important;border-bottom:0}
+ @page{size:A4;margin:12mm}
+}
+#pv{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;background:#2b2f36}
+#pv.on{display:flex}
+.pvbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:var(--acc);color:#fff}
+.pvbar b{flex:1;min-width:120px}
+.pvbar button{border:0;border-radius:6px;padding:8px 12px;min-width:38px;font-weight:700;cursor:pointer;background:#fff;color:#0f4c81}
+.pvbar span{min-width:48px;text-align:center;font-weight:700}
+.pvbody{flex:1;overflow:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.pvsize{margin:0 auto;position:relative}
+.pvin{width:816px;transform-origin:0 0}
+@media print{#pv{display:none!important}}
+.p{font-size:13px;text-align:justify;margin:8px 0}
+.p input{display:inline-block;vertical-align:baseline}
+</style>
+</head>
+<body>
+<div class="bar"><b>Surat Pernyataan Penguasaan Fisik – Formulir Pengisian</b>
+<button onclick="tampil()">Tampilkan</button><button onclick="reset()">Kosongkan</button><button id="bpdf" onclick="simpanPDF()">Simpan PDF</button></div>
+<div class="wrap"><div class="paper" id="f">
+<div class="judul">SURAT PERNYATAAN PENGUASAAN FISIK</div>
+
+<div class="sec f">Saya yang bertanda tangan di bawah ini :</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td>Nama</td><td>:</td><td><input id="nama"></td></tr>
+<tr><td>NIK</td><td>:</td><td><input id="nik" inputmode="numeric" maxlength="16"></td></tr>
+<tr><td>Alamat</td><td>:</td><td><input id="alamat"></td></tr>
+</table>
+
+<div class="sec">Dengan ini menyatakan dengan sesungguhnya serta dengan itikad baik bahwa saya memiliki/menguasai/memanfaatkan sebidang tanah dan/atau bangunan :</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td>Luas Tanah</td><td>:</td><td><input id="tanah" inputmode="decimal" style="width:120px"> m&sup2;</td></tr>
+<tr><td>Luas Bangunan</td><td>:</td><td><input id="bangunan" inputmode="decimal" style="width:120px"> m&sup2;</td></tr>
+<tr><td>Jalan/RT/RW</td><td>:</td><td><input id="jalan"></td></tr>
+<tr><td>Kelurahan</td><td>:</td><td><input id="kel"></td></tr>
+<tr><td>Kecamatan</td><td>:</td><td><input id="kec"></td></tr>
+<tr><td>Kota/Kabupaten</td><td>:</td><td><input id="kota"></td></tr>
+</table>
+
+<div class="sec">Dengan batas-batas sebagai berikut :</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td>Utara</td><td>:</td><td><input id="utara"></td></tr>
+<tr><td>Selatan</td><td>:</td><td><input id="selatan"></td></tr>
+<tr><td>Timur</td><td>:</td><td><input id="timur"></td></tr>
+<tr><td>Barat</td><td>:</td><td><input id="barat"></td></tr>
+</table>
+
+<div class="sec">Penguasaan Objek</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td style="width:190px">Dimiliki/dikuasai sejak tahun</td><td>:</td><td><input id="thn" inputmode="numeric" maxlength="4" style="width:120px"></td></tr>
+<tr><td>Berdasarkan bukti</td><td>:</td><td><input id="bukti"></td></tr>
+</table>
+<p class="p" style="border:1px solid #000;border-top:0;margin:0;padding:6px 8px">Yang sampai saat ini masih saya miliki/kuasai/manfaatkan secara fisik dan terus-menerus, tidak ada keberatan dari pihak manapun, serta tidak dalam sengketa. Surat pernyataan ini saya buat dengan sebenar-benarnya dengan penuh tanggung jawab baik secara perdata maupun pidana, dan apabila di kemudian hari terdapat unsur-unsur yang tidak benar dalam pernyataan ini, maka segala akibat yang timbul menjadi tanggung jawab saya sepenuhnya dan saya bersedia dituntut/digugat sesuai ketentuan peraturan perundang-undangan yang berlaku.</p>
+
+<div class="sec">Demikian surat pernyataan ini saya buat di hadapan saksi-saksi :</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td colspan="3"><b>1. Saksi 1 (Ketua RT)</b></td></tr>
+<tr><td>Saksi 1 (Ketua RT)</td><td>:</td><td><input id="s1_a"></td></tr>
+<tr><td>Nama</td><td>:</td><td><input id="s1_nama"></td></tr>
+<tr><td>NIK</td><td>:</td><td><input id="s1_nik" inputmode="numeric" maxlength="16"></td></tr>
+<tr><td colspan="3"><b>2. Saksi 2 (Ketua RW)</b></td></tr>
+<tr><td>Saksi 2 (Ketua RW)</td><td>:</td><td><input id="s2_a"></td></tr>
+<tr><td>Nama</td><td>:</td><td><input id="s2_nama"></td></tr>
+<tr><td>NIK</td><td>:</td><td><input id="s2_nik" inputmode="numeric" maxlength="16"></td></tr>
+</table>
+<div class="sec">Pembuatan Pernyataan</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td>Dibuat di</td><td>:</td><td>Jakarta</td></tr>
+<tr><td>Pada tanggal</td><td>:</td><td><input id="tgl" type="date" data-f="l" style="width:170px"></td></tr>
+<tr><td>Yang Membuat Pernyataan (nama jelas)</td><td>:</td><td><input id="pembuat"></td></tr>
+</table>
+</div></div>
+<p class="note">Isi langsung pada formulir. Tanda tangan saksi, materai Rp10.000, dan tanda tangan pembuat pernyataan dibubuhkan setelah dicetak. Klik “Tampilkan” untuk melihat hasilnya (bisa di-zoom) dan “Simpan PDF” untuk menyimpannya sebagai PDF.</p>
+<div id="pv" role="dialog" aria-label="Pratinjau"><div class="pvbar"><b>Pratinjau</b><button onclick="zoomTo(Z-.1)" aria-label="Perkecil">−</button><span id="zl">100%</span><button onclick="zoomTo(Z+.1)" aria-label="Perbesar">+</button><button onclick="fit()">Pas</button><button onclick="zoomTo(1)">100%</button><button onclick="simpanPDF()">Simpan PDF</button><button onclick="tutup()">Tutup</button></div><div class="pvbody" id="pvbody"><div class="pvsize" id="pvsize"><div class="pvin" id="pvin"></div></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const PW=595.28,PH=841.89; /* A4 */
+const FJ={A:['helvetica','normal'],AB:['helvetica','bold'],AI:['helvetica','italic'],T:['times','normal'],TB:['times','bold']};
+const ids=()=>[...document.querySelectorAll('#f input')];
+function reset(){if(confirm('Kosongkan semua isian?'))ids().forEach(x=>x.value='')}
+function vals(){const V={};ids().forEach(x=>{if(!x.id)return;let v=x.value.trim();
+ if(v&&x.type==='date'){const d=new Date(v+'T00:00:00');v=d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}
+ V[x.id]=v});V.opt=[];return V}
+
+function draw(B,p,V){
+ const SZ=13,f0='T';
+ const DY=98.4,DX=(612-595.28)/2,T=(s,x,y,sz=SZ,f=f0)=>B.text(s,x-DX,y-DY,sz,f);
+ const W=(s,sz=SZ,f=f0)=>B.w(s,sz,f);
+ const dots=(x,xm,sz=SZ)=>'.'.repeat(Math.max(0,Math.floor((xm-x)/W('.',sz))));
+ const fitS=(s,mw,sz)=>{while(sz>6&&W(s,sz)>mw)sz-=.25;return sz};
+ const F=(id,x,y,xm,sz=SZ)=>{const v=V[id];if(v){T(v,x,y-.8,fitS(v,xm-x,sz))}else T(dots(x,xm,sz),x,y,sz)};
+ /* baris dengan teks + isian, rata kiri-kanan bila just */
+ const LINE=(y,x0,x1,items,just)=>{
+  const tk=[];items.forEach(it=>{if(typeof it==='string')it.split(' ').forEach(w=>tk.push({t:w}));else tk.push(it)});
+  let sz=SZ,tot,fw=t=>V[t.f]?Math.min(t.w,W(V[t.f],sz)+2):t.w,m=t=>t.t!==undefined?W(t.t,sz):W(t.pre||'',sz)+fw(t)+W(t.suf||'',sz)+(t.sup?W(t.sup,sz*.65)+.5:0);
+  const g=tk.length-1;
+  while(sz>8&&(tot=tk.reduce((a,t)=>a+m(t),0))+g*3>x1-x0)sz-=.25;
+  tot=tk.reduce((a,t)=>a+m(t),0);
+  const gap=just?(x1-x0-tot)/g:3.6;let x=x0;
+  tk.forEach(t=>{if(t.t!==undefined){T(t.t,x,y,sz);x+=W(t.t,sz)+gap}
+   else{const pw=W(t.pre||'',sz);if(t.pre)T(t.pre,x,y,sz);const w2=fw(t);F(t.f,x+pw,y,x+pw+w2,sz);let e=x+pw+w2;
+    if(t.suf){T(t.suf,e,y,sz);e+=W(t.suf,sz)}if(t.sup){T(t.sup,e+.5,y-4.6,sz*.65);e+=W(t.sup,sz*.65)+.5}x=e+gap}})};
+ const JU=(y,x0,x1,s)=>LINE(y,x0,x1,[s],true);
+ const L=(y,x,s)=>T(s,x,y);
+ const R=(y,lab,id,x=57.84,cx=171,vx=185.64,vm=545.63)=>{L(y,x,lab);L(y,cx,':');F(id,vx,y,vm)};
+
+ /* kepala dihapus */
+ const tj='SURAT PERNYATAAN PENGUASAAN FISIK';T(tj,306-W(tj,SZ,'TB')/2,214.6,SZ,'TB');
+
+ L(242.8,56.64,'Saya yang bertanda tangan di bawah ini:');
+ R(256.8,'nama','nama',57.84,169.92,184.08,547.92);
+ R(271,'NIK','nik',57.84,169.92,184.08,547.92);
+ R(285,'alamat','alamat',57.84,169.92,184.08,547.92);
+
+ JU(313.2,56.64,555.35,'dengan ini menyatakan dengan sesungguhnya serta dengan itikad baik bahwa saya');
+ LINE(327.3,56.64,555.35,['memiliki/menguasai/memanfaatkan sebidang tanah dengan luas',{f:'tanah',w:58,suf:'m',sup:'2'},'dan/atau'],true);
+ LINE(341.3,56.64,360,['bangunan dengan luas',{f:'bangunan',w:52,suf:'m',sup:'2'},'yang terletak di:'],false);
+ R(355.5,'Jalan/RT/RW','jalan',57.83,171,185.64,545.63);
+ R(369.5,'Kelurahan','kel',57.84,171,185.64,545.63);
+ R(383.7,'Kecamatan','kec',57.84,171,185.64,545.63);
+ R(397.7,'Kota/Kabupaten','kota',57.84,171,185.64,545.63);
+
+ L(425.9,56.64,'dengan batas-batas sebagai berikut:');
+ L(440,57.84,'utara');L(440,106.92,':');F('utara',120.24,440,288.23);L(440,300,'selatan');L(440,359.52,':');F('selatan',372.96,440,540.95);
+ L(454.1,57.84,'timur');L(454.1,106.92,':');F('timur',120.24,454.1,288.23);L(454.1,300,'barat');L(454.1,359.52,':');F('barat',372.96,454.1,540.95);
+
+ LINE(482.2,56.64,555.11,['Bahwa objek tersebut saya miliki/kuasai/manfaatkan sejak tahun',{f:'thn',w:30},'Berdasarkan'],true);
+ LINE(496.4,56.64,555.35,[{pre:'bukti.',f:'bukti',w:210,suf:','},'yang sampai saat ini masih saya'],true);
+ JU(510.4,56.64,555.24,'miliki/kuasai/manfaatkan secara fisik dan terus-menerus, tidak ada keberatan dari');
+ L(524.4,56.64,'pihak manapun, serta tidak dalam sengketa.');
+
+ JU(552.6,56.64,555.35,'Surat pernyataan ini saya buat dengan sebenar-benarnya dengan penuh tanggung');
+ JU(566.8,56.64,555.23,'jawab baik secara perdata maupun pidana, dan apabila di kemudian hari terdapat');
+ JU(580.8,56.64,555.24,'unsur-unsur yang tidak benar dalam pernyataan ini, maka segala akibat yang timbul');
+ JU(594.9,56.64,555.24,'menjadi tanggung jawab saya sepenuhnya dan saya bersedia dituntut/digugat sesuai');
+ L(609,56.64,'ketentuan peraturan perundang-undangan yang berlaku.');
+
+ L(637.2,56.64,'Demikian surat pernyataan ini saya buat di hadapan saksi-saksi:');
+ const SK=(y,no,tag,k)=>{L(y,55.08,no);
+  [[tag,'s'+k+'_a'],['Nama','s'+k+'_nama'],['NIK','s'+k+'_nik'],['Tandatangan','']].forEach((a,i)=>{const yy=y+i*14.05;L(yy,78.6,a[0]);L(yy,205.32,':');if(a[1])F(a[1],219.48,yy,327.47);else T(dots(219.48,327.47),219.48,yy)})};
+ SK(665.3,'1.','Saksi 1 (Ketua RT)',1);
+ SK(735.8,'2.','Saksi 2 (Ketua RW)',2);
+ const C=(s,cx,y,sz=SZ)=>T(s,cx-W(s,sz)/2,y,sz);
+ L(665.3,377.4,'Dibuat di Jakarta');
+ L(679.5,377.4,'pada tanggal');F('tgl',456.84,679.5,540);
+ C('Yang Membuat Pernyataan,',450.5,707.6);
+ C('Materai Rp10.000,00',450.5,735.8);
+ L(764,360.96,'(');L(764,540-W(')'),')');
+ if(V.pembuat)C(V.pembuat,450.5,764-.8,fitS(V.pembuat,160,SZ));else T(dots(360.96+W('('),540-W(')')),360.96+W('('),764);
+ C('Nama jelas',450.5,778);
+}
+
+function pdfB(doc){const sf=f=>{doc.setFont(FJ[f][0],FJ[f][1])};return{
+ text(s,x,y,sz,f){sf(f);doc.setFontSize(sz);doc.text(s,x,y)},
+ w(s,sz,f){sf(f);doc.setFontSize(sz);return doc.getTextWidth(s)},
+ line(a,b,c,d,w){doc.setLineWidth(w);doc.line(a,b,c,d)},
+ rect(x,y,w,h){doc.rect(x,y,w,h,'F')},
+ img(){}}}
+function cvB(ctx,k){const ft=(sz,f)=>{ctx.font=(f.indexOf('I')>0?'italic ':'')+(f.indexOf('B')>0?'bold ':'')+(sz*k)+'px '+(f[0]==='T'?'"Times New Roman",Times,"Liberation Serif",serif':'Arial,Helvetica,"Liberation Sans",sans-serif')};return{
+ text(s,x,y,sz,f){ft(sz,f);ctx.fillText(s,x*k,y*k)},
+ w(s,sz,f){ft(sz,f);return ctx.measureText(s).width/k},
+ line(a,b,c,d,w){ctx.lineWidth=w*k;ctx.beginPath();ctx.moveTo(a*k,b*k);ctx.lineTo(c*k,d*k);ctx.stroke()},
+ rect(x,y,w,h){ctx.fillRect(x*k,y*k,w*k,h*k)},
+ img(){}}}
+let Z=1;const PXW=PW*96/72;
+function zoomTo(z){Z=Math.max(.3,Math.min(3,z));const w=$('pvin');w.style.transform='scale('+Z+')';
+ const s=$('pvsize');s.style.width=Math.round(PXW*Z)+'px';s.style.height=Math.round(w.offsetHeight*Z)+'px';$('zl').textContent=Math.round(Z*100)+'%'}
+function fit(){zoomTo(Math.min(1,($('pvbody').clientWidth-32)/PXW))}
+async function tampil(){const w=$('pvin');w.innerHTML='';const V=vals();const k=PXW/PW*2;
+ const cv=document.createElement('canvas');cv.width=Math.round(PW*k);cv.height=Math.round(PH*k);cv.style.cssText='display:block;width:'+PXW+'px;height:'+(PH*96/72)+'px;background:#fff;margin:0 0 14px;box-shadow:0 2px 12px #0006';
+ const c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,cv.width,cv.height);c.fillStyle='#000';c.strokeStyle='#000';c.textBaseline='alphabetic';c.lineCap='butt';draw(cvB(c,k),0,V);w.appendChild(cv);
+ $('pv').classList.add('on');document.body.style.overflow='hidden';fit();$('pvbody').scrollTop=0}
+function tutup(){$('pv').classList.remove('on');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')tutup()});
+function nama(){const m=($('nama').value||'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,'');return 'Surat_Pernyataan_Penguasaan_Fisik'+(m?'_'+m:'')+'.pdf'}
+async function kirim(blob,fn){
+ let d=null;try{d=window.claude&&await claude.use('downloads')}catch(e){}
+ if(d){try{await d.save({filename:fn,data:blob})}catch(e){if(!e||e.code!=='declined')alert('PDF tidak dapat disimpan di sini.')}return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+async function simpanPDF(){
+ const J=window.jspdf&&window.jspdf.jsPDF;if(!J){alert('Pustaka PDF belum termuat. Periksa koneksi lalu coba lagi.');return}
+ const btn=$('bpdf'),t=btn.textContent;btn.disabled=true;btn.textContent='Menyiapkan…';
+ try{const V=vals(),doc=new J({unit:'pt',format:[PW,PH],orientation:'portrait',compress:true});
+  doc.setDrawColor(0);doc.setFillColor(0);doc.setTextColor(0);doc.setProperties({title:'Surat Pernyataan Penguasaan Fisik'});
+  draw(pdfB(doc),0,V);
+  await kirim(doc.output('blob'),nama())}
+ catch(e){alert('PDF gagal dibuat.')}
+ finally{btn.disabled=false;btn.textContent=t}}
+</script>
+</body>
+</html>

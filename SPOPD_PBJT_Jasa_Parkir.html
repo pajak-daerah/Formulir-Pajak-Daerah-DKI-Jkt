@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SPOPD PBJT Jasa Parkir</title>
+<style>
+:root{--bg:#eef1f5;--paper:#fff;--ink:#111;--line:#222;--acc:#0f4c81;--mut:#5b6572;--fld:#e6d9f7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--mut:#9aa6b4;--acc:#6db3f2}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font:14px/1.4 Arial,Helvetica,sans-serif;color:var(--ink)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:var(--acc);color:#fff}
+.bar b{flex:1;min-width:180px}
+.bar button{border:0;border-radius:6px;padding:8px 14px;font-weight:700;cursor:pointer;background:#fff;color:#0f4c81}
+.wrap{overflow-x:auto;padding:14px}
+.paper{width:820px;margin:0 auto;background:#fff;color:#111;border:1px solid #bbb;padding:18px 22px;box-shadow:0 2px 10px #0002}
+.top{display:flex;justify-content:space-between}
+.top span{border:1px solid #000;padding:3px 14px;font:700 11px Times,serif}
+.head{display:flex;gap:16px;align-items:center;margin:10px 0 8px;padding-left:30px}.head>div:last-child{flex:1;text-align:center}
+.head .lg{width:84px;height:96px;display:flex;align-items:center;justify-content:center}.head .lg img{max-width:100%;max-height:100%;display:block;background:#fff}
+.head h2{margin:0;font-size:18px}.head p{margin:0;font-size:12px}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #000;padding:3px 5px;vertical-align:top;font-weight:400}
+.sec{background:#fff;font-weight:700;padding:3px 5px;border:1px solid #000;border-top:0}
+input,textarea{font:inherit;color:#111;color-scheme:light;background:var(--fld);border:0;border-bottom:1px dotted #888;padding:2px 4px;width:100%;outline:0}
+input:focus{background:#d6c2f0}
+input.r{text-align:right}
+.id td{border:0;padding:2px 4px}.id td:first-child{width:150px}.id td:nth-child(2){width:12px}
+.sm{width:110px;display:inline-block}
+.c{text-align:center}
+.rd label{margin-right:10px;white-space:nowrap}
+.rd input{width:auto;margin:0 2px}
+.note{color:var(--mut);font-size:12px;max-width:820px;margin:8px auto}
+@media print{
+ :root{padding:0}body{background:#fff}.bar,.note{display:none}.wrap{padding:0;overflow:visible}
+ .paper{border:0;box-shadow:none;width:100%;padding:0}
+ input{background:transparent!important;color:#111!important;border-bottom:0}
+ @page{size:A4;margin:12mm}
+}
+#pv{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;background:#2b2f36}
+#pv.on{display:flex}
+.pvbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:var(--acc);color:#fff}
+.pvbar b{flex:1;min-width:120px}
+.pvbar button{border:0;border-radius:6px;padding:8px 12px;min-width:38px;font-weight:700;cursor:pointer;background:#fff;color:#0f4c81}
+.pvbar span{min-width:48px;text-align:center;font-weight:700}
+.pvbody{flex:1;overflow:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.pvsize{margin:0 auto;position:relative}
+.pvin{width:816px;transform-origin:0 0}
+.og{white-space:nowrap}
+.opt{cursor:pointer;padding:0 2px;border-radius:3px}
+.opt:hover{background:#eef5ff}
+.opt.cr{text-decoration:line-through}
+.ttd2{margin-top:14px;font-size:13px}
+.t0{display:flex;align-items:flex-start}.t1{margin-left:auto;margin-right:5%;width:31%;line-height:1.9}
+.t2{display:flex;margin-top:56px;align-items:flex-end}
+.tkiri{margin-left:8%;width:25%}
+.tkan{margin-left:auto;margin-right:5%;width:31%}
+@media print{.opt:hover{background:none}}
+.rule{border-top:3px solid #000;border-bottom:1px solid #000;height:6px}
+.pgsep{background:#c9ced6;color:#444;text-align:center;font:700 11px Arial,sans-serif;padding:4px;margin:14px -22px}
+.opt.ck.sel{background:#cfe3ff}.ck.sel::before{content:"\2713 ";font-weight:700}.ck{display:inline-block;margin-right:10px}
+.bxo{display:inline-block;width:15px;height:15px;border:1px solid #000;vertical-align:-3px;margin-right:4px;text-align:center;line-height:13px}
+.opt.sel .bxo::after{content:"\2715";font-weight:700}.id .og{white-space:normal}.sm2{width:90px;display:inline-block}
+.lm td{border:0;padding:0 14px 0 0}
+.kb{display:block;margin:2px 0 2px 16px;margin-right:0}
+.rp{display:flex;gap:6px;align-items:center;margin:2px 0}.rp input{flex:1;min-width:0;max-width:170px}
+.ind{display:inline-block;width:62px}
+@media print{.opt.ck.sel{background:none}}
+</style>
+</head>
+<body>
+<div class="bar"><b>SPOPD PBJT Jasa Parkir – Formulir Pengisian</b>
+<button onclick="tampil()">Tampilkan</button><button onclick="reset()">Kosongkan</button><button id="bpdf" onclick="simpanPDF()">Simpan PDF</button></div>
+<div class="wrap"><div class="paper" id="f">
+<div class="head"><div class="lg"><img src="data:image/png;base64,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" alt="Logo Jaya Raya"></div><div><p style="font-size:14px">PEMERINTAH PROVINSI DAERAH KHUSUS IBUKOTA JAKARTA</p><h2>BADAN PENDAPATAN DAERAH</h2><p>JALAN ABDUL MUIS NO. 66 Telp. 3865580 – 85 Fax. 3865788<br>JAKARTA 10160</p></div></div>
+<div class="rule"></div>
+<div class="c" style="margin:8px 0"><b>SURAT PENDAFTARAN OBJEK PAJAK DAERAH<br>PAJAK BARANG DAN JASA TERTENTU ATAS JASA PARKIR<br>( SPOPD PBJT ATAS JASA PARKIR )</b><br><br>Nomor : ……………. …………………… &nbsp; <small>(Nomor dan Unit Pengelola diisi oleh petugas)</small></div>
+
+<div class="sec">I. Data Objek Pajak</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td>1. Jenis Permohonan</td><td>:</td><td><span class="og" data-t="b"><span class="opt"><i class="bxo"></i> Pendaftaran Baru</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="opt"><i class="bxo"></i> Perubahan Data</span></span></td></tr>
+<tr><td>2. Nama Objek Pajak</td><td>:</td><td><input id="nama_op"></td></tr>
+<tr><td>3. Alamat Objek Pajak</td><td>:</td><td><input id="alamat_op"></td></tr>
+<tr><td></td><td></td><td>RT <input id="rt_op" class="sm" style="width:50px"> RW <input id="rw_op" class="sm" style="width:50px"> &nbsp; Kode Pos <input id="pos_op" class="sm" inputmode="numeric" maxlength="5"></td></tr>
+<tr><td>4. Kelurahan</td><td>:</td><td><input id="kel_op"></td></tr>
+<tr><td>5. Kecamatan</td><td>:</td><td><input id="kec_op"></td></tr>
+<tr><td>6. Kota/Kab. Adm</td><td>:</td><td><input id="kota_op"></td></tr>
+<tr><td>7. Nomor Telepon</td><td>:</td><td><input id="tel_op" inputmode="tel"></td></tr>
+<tr><td>8. TMT Operasi</td><td>:</td><td><input id="tmt" type="date"></td></tr>
+<tr><td>9. NOP PBB</td><td>:</td><td><input id="nopbb" placeholder="31.XX.XXX.XXX.XXX.XXXX.X" inputmode="numeric" maxlength="24"></td></tr>
+</table>
+
+<div class="sec">II. Data Wajib Pajak</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td>1. Nama Badan Hukum</td><td>:</td><td><input id="badan"></td></tr>
+<tr><td>2. Alamat Badan Hukum</td><td>:</td><td><input id="alamat_b"></td></tr>
+<tr><td></td><td></td><td>RT <input id="rt_b" class="sm" style="width:50px"> RW <input id="rw_b" class="sm" style="width:50px"> &nbsp; Kode Pos <input id="pos_b" class="sm" inputmode="numeric" maxlength="5"></td></tr>
+<tr><td>3. Nama Pemilik/ Penanggung Pajak</td><td>:</td><td><input id="pemilik"></td></tr>
+<tr><td>4. Alamat</td><td>:</td><td><input id="alamat_p"></td></tr>
+<tr><td></td><td></td><td>RT <input id="rt_p" class="sm" style="width:50px"> RW <input id="rw_p" class="sm" style="width:50px"> &nbsp; Kode Pos <input id="pos_p" class="sm" inputmode="numeric" maxlength="5"></td></tr>
+<tr><td>5. Kelurahan</td><td>:</td><td><input id="kel_wp"></td></tr>
+<tr><td>6. Kecamatan</td><td>:</td><td><input id="kec_wp"></td></tr>
+<tr><td>7. Kota/Kab. Adm</td><td>:</td><td><input id="kota_wp"></td></tr>
+<tr><td>8. NPWP/NPWPD</td><td>:</td><td><input id="npwp"></td></tr>
+<tr><td>9. NIK/NIB</td><td>:</td><td><input id="nik"></td></tr>
+<tr><td>10. No Telepon/HP/Faks</td><td>:</td><td><input id="telp_wp"></td></tr>
+<tr><td>11. Email</td><td>:</td><td><input id="email" type="email"></td></tr>
+</table>
+
+<div class="sec">III. Data Usaha</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td>1. Status Usaha</td><td>:</td><td><span class="og" data-t="b"><span class="opt"><i class="bxo"></i> 1. Induk</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="opt"><i class="bxo"></i> 2. Cabang</span></span></td></tr>
+<tr><td>2. Lokasi/Luas Tempat</td><td>:</td><td>
+a. Dalam Gedung : <input id="g_p" style="width:56px" inputmode="decimal"> m X <input id="g_l" style="width:56px" inputmode="decimal"> m X <input id="g_lt" style="width:56px" inputmode="decimal"> Lt = <input id="g_luas" style="width:70px" inputmode="decimal"> m&sup2;<br>
+b. Halaman/Pelataran : <input id="h_p" style="width:56px" inputmode="decimal"> m X <input id="h_l" style="width:56px" inputmode="decimal"> m = <input id="h_luas" style="width:70px" inputmode="decimal"> m&sup2;</td></tr>
+<tr><td>3. Pelayanan Jasa Valet</td><td>:</td><td><span class="og" data-t="b"><span class="opt"><i class="bxo"></i> Ada</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="opt"><i class="bxo"></i> Tidak Ada</span></span></td></tr>
+<tr><td>4. Kapasitas/Daya tampung</td><td>:</td><td>
+a. Mobil <span class="ind"></span><input id="cap_mobil" style="width:90px" inputmode="numeric"> Unit<br>
+b. Motor <span class="ind"></span><input id="cap_motor" style="width:90px" inputmode="numeric"> Unit<br>
+c. Valet <span class="ind" style="width:66px"></span><input id="cap_valet" style="width:90px" inputmode="numeric"> Unit<br>
+d. Member <span class="ind" style="width:50px"></span><input id="cap_member" style="width:90px" inputmode="numeric"> Unit<br>
+e. Lainnya <span class="ind" style="width:44px"></span><input id="cap_lain" style="width:90px" inputmode="numeric"> Unit</td></tr>
+<tr><td>5. Tarif</td><td>:</td><td>
+<b style="font-weight:400">a. Mobil :</b>
+<div class="rp"><span>1). jam pertama Rp</span><input id="tm1" class="r" inputmode="numeric"></div>
+<div class="rp"><span>2). tiap jam berikutnya Rp</span><input id="tm2" class="r" inputmode="numeric"></div>
+<b style="font-weight:400">b. Motor :</b>
+<div class="rp"><span>1). jam pertama Rp</span><input id="tt1" class="r" inputmode="numeric"></div>
+<div class="rp"><span>2). tiap jam berikutnya Rp</span><input id="tt2" class="r" inputmode="numeric"></div></td></tr>
+</table>
+<div class="pgsep">— Halaman 2 —</div>
+<table class="id" style="border:1px solid #000;border-top:0">
+<tr><td></td><td></td><td>
+<div class="rp"><span>c. Valet : Rp</span><input id="tv" class="r" inputmode="numeric"><span>/Unit</span></div>
+<div class="rp"><span>d. Member : Rp</span><input id="tmb" class="r" inputmode="numeric"></div>
+<div class="rp"><span>e. Lainnya : Rp</span><input id="tl" class="r" inputmode="numeric"></div></td></tr>
+<tr><td>6. Jumlah Pintu Masuk</td><td>:</td><td><input id="pintu" style="width:90px" inputmode="numeric"> Buah</td></tr>
+<tr><td>7. Sistem Pemungutan</td><td>:</td><td><div class="og" data-t="c"><span class="opt ck">a. Komputer</span><br><span class="opt ck">b. Manual</span><br><span class="opt ck">c.</span> <input id="sis_c" style="width:60%"></div></td></tr>
+<tr><td>8. Alat Transaksi /Cash Register</td><td>:</td><td>a. Merk <input id="merk" style="width:220px"><br>b. Type <input id="tipe" style="width:220px"><br>c. Jumlah <input id="jml_alat" style="width:60px" inputmode="numeric"> unit<br>d. <input id="alat_d" style="width:220px"></td></tr>
+<tr><td>9. Nomor Izin Pengelolaan</td><td>:</td><td><input id="izin" style="width:34%"> masa berlaku s.d. <input id="izin_m" type="date" data-f="l" style="width:150px"></td></tr>
+<tr><td>10. Klasifikasi Jasa Parkir</td><td>:</td><td><div class="og" data-t="c"><div>1. Penyediaan atau penyelenggaraan tempat parkir :</div>
+<span class="opt ck kb">a. Penyediaan atau penyelenggaraan tempat parkir oleh pihak swasta</span>
+<span class="opt ck kb">b. Penyediaan tempat parkir yang dimiliki oleh Pemerintah, Pemerintah Provinsi DKI Jakarta, dan pemerintah daerah lainnya, yang penyelenggaraan dan/atau pengelolaannya diserahkan kepada pihak swasta</span>
+<span class="opt ck kb">c. Penyediaan tempat parkir yang diselenggarakan oleh perkantoran yang hanya digunakan untuk karyawannya sendiri dengan dipungut bayaran</span>
+<span class="opt ck" style="display:block;margin:4px 0">2. Pelayanan memarkirkan kendaraan (parkir valet)</span></div></td></tr>
+</table>
+
+<div class="sec">IV. Keterangan Lain-lain :</div>
+<table><tr><td style="border-top:0"><input id="ket1" style="margin:2px 0"><br><input id="ket2" style="margin:2px 0"><br><input id="ket3" style="margin:2px 0"><br><input id="ket4" style="margin:2px 0"><br></td></tr></table>
+<p style="font-size:12px;margin:10px 0;text-align:justify;text-indent:60px">Dengan menyadari sepenuhnya akan segala akibat termasuk sanksi-sanksi sesuai dengan ketentuan perundang-undangan yang berlaku, saya menyatakan bahwa apa yang telah saya beri tahukan di atas, beserta lampiran-lampirannya adalah benar dan lengkap.</p>
+<div class="ttd2"><div class="t0"><div style="flex:1">&nbsp;</div><div class="t1">Jakarta, <input id="tgl" type="date" data-f="l" style="width:150px"><br>Wajib Pajak/Penanggung Pajak,</div></div>
+<div class="t2"><div class="tkiri">Petugas Penerima,<div style="border-bottom:1px dotted #000;height:1.7em"></div>NIP <span style="display:inline-block;width:150px;border-bottom:1px dotted #000">&nbsp;</span></div><div class="tkan"><input id="ttdn"><br>Nama Jelas/Stempel</div></div></div>
+<table class="lm" style="width:auto;font-size:12px;line-height:1.5;margin-top:14px"><tr><td colspan="3">Keterangan :</td></tr><tr><td>Lembar</td><td>1</td><td>Badan Pendapatan Daerah</td></tr><tr><td></td><td>2</td><td>Wajib Pajak</td></tr></table>
+</div></div>
+<p class="note">Isi langsung pada formulir. Klik kotak atau pilihan (a, b, c…) untuk menandainya; klik lagi untuk membatalkan. Klik “Tampilkan” untuk melihat hasilnya (bisa di-zoom) dan “Simpan PDF” untuk menyimpannya sebagai PDF.</p>
+<div id="pv" role="dialog" aria-label="Pratinjau"><div class="pvbar"><b>Pratinjau</b><button onclick="zoomTo(Z-.1)" aria-label="Perkecil">−</button><span id="zl">100%</span><button onclick="zoomTo(Z+.1)" aria-label="Perbesar">+</button><button onclick="fit()">Pas</button><button onclick="zoomTo(1)">100%</button><button onclick="simpanPDF()">Simpan PDF</button><button onclick="tutup()">Tutup</button></div><div class="pvbody" id="pvbody"><div class="pvsize" id="pvsize"><div class="pvin" id="pvin"></div></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const LOGO="data:image/png;base64,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";
+const PW=612,PH=936,NP=2,XM=553;
+const FJ={A:['helvetica','normal'],AB:['helvetica','bold'],AI:['helvetica','italic'],T:['times','normal'],TB:['times','bold']};
+const logoImg=new Image(),logoReady=new Promise(r=>{logoImg.onload=r;logoImg.onerror=r});logoImg.src=LOGO;
+const ids=()=>[...document.querySelectorAll('#f input')];
+function reset(){if(confirm('Kosongkan semua isian?')){ids().forEach(x=>x.value='');document.querySelectorAll('#f .opt').forEach(o=>o.classList.remove('sel','cr'))}}
+function vals(){const V={};ids().forEach(x=>{if(!x.id)return;let v=x.value.trim();
+ if(v&&x.type==='date'){const d=new Date(v+'T00:00:00');v=x.dataset.f==='l'?d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):v.slice(8,10)+'-'+v.slice(5,7)+'-'+v.slice(0,4)}
+ V[x.id]=v});
+ V.opt=[...document.querySelectorAll('#f .og')].map(og=>[...og.querySelectorAll('.opt')].reduce((a,x,i)=>x.classList.contains('sel')?a.concat(i):a,[]));return V}
+
+/* ---------- Penggambar halaman (PDF & pratinjau memakai kode yang sama) ---------- */
+function draw(B,p,V){
+ const T=(s,x,y,sz=11.04,f='A')=>B.text(s,x,y,sz,f);
+ const W=(s,sz=11.04,f='A')=>B.w(s,sz,f);
+ const L=(a,b,c,d,w=.75)=>B.line(a,b,c,d,w);
+ const C=(s,cx,y,sz,f)=>T(s,cx-W(s,sz,f)/2,y,sz,f);
+ const BOX=(x,y,w,h)=>{L(x,y,x+w,y);L(x,y+h,x+w,y+h);L(x,y,x,y+h);L(x+w,y,x+w,y+h)};
+ const dots=(x,xm,sz=11.04)=>'.'.repeat(Math.max(0,Math.floor((xm-x)/W('.',sz))));
+ const fitS=(s,mw,sz)=>{while(sz>5&&W(s,sz)>mw)sz-=.25;return sz};
+ const F=(id,x,y,xm,sz=11.04)=>{const v=V[id];if(v){const z=fitS(v,xm-x,sz);T(v,x,y-.8,z)}else T(dots(x,xm,sz),x,y,sz)};
+ const UL=(s,x,y,after)=>{const w=W(s,11.04,'AB');T(s,x,y,11.04,'AB');B.rect(x,y+1.2,w,1.2);if(after)T(after,x+w+3,y,11.04,'AB')};
+ const row=(n,lab,y,cx=199.37)=>{if(n)T(n,57.6,y);if(lab)T(lab,78.98,y);if(cx)T(':',cx,y)};
+ const S=gi=>V.opt[gi]||[];
+ const CROSS=(x,y,w,h)=>{L(x+2,y+2,x+w-2,y+h-2,1);L(x+w-2,y+2,x+2,y+h-2,1)};
+ const CK=(x,y)=>{L(x,y-3.5,x+2.6,y-1,1.1);L(x+2.6,y-1,x+7,y-8,1.1)};
+ const RTRW=(y,s)=>{T('RT',220.73,y);F('rt'+s,238.46,y,272);T('RW',277.71,y);F('rw'+s,299.06,y,332);T('Kode Pos',386.98,y);F('pos'+s,440.74,y,512)};
+ const SQ=(y,x,items)=>{for(const it of items){if(it[0]==='t'){T(it[1],x,y);x+=W(it[1])+4}else if(it[0]==='f'){F(it[1],x,y,x+it[2]);x+=it[2]+4}else if(it[0]==='s'){T(it[1],x-4,y-4,6.96);x+=2}}};
+ const JU=(s,x,y,w)=>{const ws=s.split(' '),tot=ws.reduce((a,t)=>a+W(t),0),g=(w-tot)/(ws.length-1);ws.forEach(t=>{T(t,x,y);x+=W(t)+g})};
+
+ if(p===0){
+  /* kop */
+  BOX(64.5,15,271.5,19.45);C('LAYANAN INI TIDAK DIPUNGUT BIAYA APAPUN',200.25,28.3,9.96,'TB');
+  BOX(491.7,10.55,68.25,19.45);C('FORMAT 8',525.8,23.9,9.96,'T');
+  B.img(79.2,42.1,64.3,68.2);
+  C('PEMERINTAH PROVINSI DAERAH KHUSUS IBUKOTA JAKARTA',335,56.5,12,'A');
+  C('BADAN PENDAPATAN DAERAH',335,73.1,15,'AB');
+  C('JALAN ABDUL MUIS NO. 66 Telp. 3865580 – 85 Fax. 3865788',335,86.5,11.04,'A');
+  C('JAKARTA 10160',335,99.3,11.04,'A');
+  B.rect(55.95,116.45,504,.9);B.rect(55.95,118.25,504,2.7);
+  C('SURAT PENDAFTARAN OBJEK PAJAK DAERAH',308.5,142.6,12,'AB');
+  C('PAJAK BARANG DAN JASA TERTENTU ATAS JASA PARKIR',308.5,156.4,12,'AB');
+  C('( SPOPD PBJT ATAS JASA PARKIR )',308.5,170.2,12,'AB');
+  T('Nomor '+dots(207.65+W('Nomor '),400),207.65,195.3);
+  T('Unit Pengelola',60.72,213.1);T(':',185.18,213.1);T(dots(220.73,560),220.73,213.1);
+  T('(Diisi oleh petugas)',60.72,225.7,9);T(dots(220.73,560),220.73,225.7);
+  L(55.95,232.85,559.95,232.85);
+
+  /* I */
+  UL('I. Data Objek Pajak',57.6,257.4,' :');
+  row('1.','Jenis Permohonan',276.4);
+  BOX(219.75,266.85,10.5,9.75);T('Pendaftaran Baru',234.89,276.4);
+  BOX(366.75,266.85,10.5,9.75);T('Perubahan Data',381.67,276.4);
+  if(S(0).includes(0))CROSS(219.75,266.85,10.5,9.75);
+  if(S(0).includes(1))CROSS(366.75,266.85,10.5,9.75);
+  row('2.','Nama Objek Pajak',289.0);F('nama_op',220.73,289.0,XM);
+  row('3.','Alamat Objek Pajak',301.7);F('alamat_op',220.73,301.7,XM);
+  RTRW(314.3,'_op');
+  row('4.','Kelurahan',327.0);F('kel_op',220.73,327.0,XM);
+  row('5.','Kecamatan',339.6);F('kec_op',220.73,339.6,XM);
+  row('6.','Kota/Kab. Adm',352.2);F('kota_op',220.73,352.2,XM);
+  row('7.','Nomor Telepon',365.0);F('tel_op',220.73,365.0,XM);
+  row('8.','TMT Operasi',377.6);F('tmt',220.73,377.6,XM);
+  row('9.','NOP PBB',390.3);F('nopbb',220.73,390.3,XM);
+
+  /* II */
+  UL('II. Data Wajib Pajak',57.6,421.2,' :');
+  row('1.','Nama Badan Hukum',440.2);F('badan',220.73,440.2,XM);
+  row('2.','Alamat Badan Hukum',452.9);F('alamat_b',220.73,452.9,XM);
+  RTRW(465.6,'_b');
+  row('3.','Nama Pemilik/',478.3);F('pemilik',220.73,478.3,XM);
+  T('Penanggung Pajak',78.98,490.9);
+  row('4.','Alamat',503.5);F('alamat_p',220.73,503.5,XM);
+  RTRW(516.2,'_p');
+  row('5.','Kelurahan',528.8);F('kel_wp',220.73,528.8,XM);
+  row('6.','Kecamatan',541.5);F('kec_wp',220.73,541.5,XM);
+  row('7.','Kota/Kab. Adm',554.1);F('kota_wp',220.73,554.1,XM);
+  row('8.','NPWP/NPWPD',566.8);F('npwp',220.73,566.8,XM);
+  row('9.','NIK/NIB',579.4);F('nik',220.73,579.4,XM);
+  row('10.','No Telepon/HP/Faks',592.0);F('telp_wp',220.73,592.0,XM);
+  row('11.','Email',604.8);F('email',220.73,604.8,XM);
+
+  /* III */
+  UL('III. Data Usaha',57.6,633.5,' :');
+  row('1.','Status Usaha',652.4,201.65);
+  BOX(218.25,641.65,14.4,14.4);T('1.  Induk',238,652.4);
+  BOX(355.05,641.65,14.4,14.4);T('2.  Cabang',374,652.4);
+  if(S(1).includes(0))CROSS(218.25,641.65,14.4,14.4);
+  if(S(1).includes(1))CROSS(355.05,641.65,14.4,14.4);
+  row('2.','Lokasi/Luas Tempat',677.7,201.65);
+  SQ(677.7,219.65,[['t','a. Dalam Gedung :'],['f','g_p',30],['t','m X'],['f','g_l',30],['t','m X'],['f','g_lt',30],['t','Lt ='],['f','g_luas',38],['t','m'],['s','2']]);
+  SQ(690.4,219.65,[['t','b. Halaman/Pelataran :'],['f','h_p',30],['t','m X'],['f','h_l',30],['t','m ='],['f','h_luas',38],['t','m'],['s','2']]);
+  row('3.','Pelayanan Jasa Valet',716,201.65);
+  BOX(218.25,705.25,14.4,14.4);T('Ada',238,716);
+  BOX(355.05,705.25,14.4,14.4);T('Tidak Ada',374,716);
+  if(S(2).includes(0))CROSS(218.25,705.25,14.4,14.4);
+  if(S(2).includes(1))CROSS(355.05,705.25,14.4,14.4);
+  row('4.','Kapasitas/Daya tampung',741,201.65);
+  [['a. Mobil','cap_mobil'],['b. Motor','cap_motor'],['c. Valet','cap_valet'],['d. Member','cap_member'],['e. Lainnya','cap_lain']].forEach((a,i)=>{const y=741+i*12.65;T(a[0],219.65,y);F(a[1],285,y,345);T('Unit',349,y)});
+  row('5.','Tarif',816,201.65);
+  T('a. Mobil : 1). jam pertama',219.65,816);T('Rp',380,816);F('tm1',395,816,520);
+  T('2). tiap jam berikutnya',247,828.7);T('Rp',380,828.7);F('tm2',395,828.7,520);
+  T('b. Motor : 1). jam pertama',219.65,841.4);T('Rp',380,841.4);F('tt1',395,841.4,520);
+  T('2). tiap jam berikutnya',247,854.1);T('Rp',380,854.1);F('tt2',395,854.1,520);
+ } else {
+  /* halaman 2 */
+  [['c. Valet :','tv',55.3,1],['d. Member :','tmb',68.0,0],['e. Lainnya :','tl',80.6,0]].forEach(a=>{T(a[0],219.65,a[2]);T('Rp',285,a[2]);F(a[1],300,a[2],a[3]?420:440);if(a[3])T('/Unit',424,a[2])});
+  row('6.','Jumlah Pintu Masuk',105.8,201.65);F('pintu',220.73,105.8,300);T('Buah',305,105.8);
+  row('7.','Sistem Pemungutan',131.5,201.65);
+  T('a. Komputer',219.65,131.5);T('b. Manual',219.65,144.2);T('c.',219.65,156.9);F('sis_c',234.89,156.9,420);
+  if(S(3).includes(0))CK(210.65,131.5);if(S(3).includes(1))CK(210.65,144.2);if(S(3).includes(2))CK(210.65,156.9);
+  T('8.',57.6,182.5);T('Alat Transaksi /Cash',78.98,182.5);
+  T('Register',78.98,195.2,11.04,'AI');T(':',201.65,195.2);
+  T('a. Merk',219.65,195.2);F('merk',274,195.2,440);
+  T('b. Type',219.65,207.9);F('tipe',274,207.9,440);
+  T('c. Jumlah',219.65,220.5);F('jml_alat',274,220.5,310);T('unit',314,220.5);
+  T('d.',219.65,233.2);F('alat_d',234.89,233.2,440);
+  T('9.',57.6,258.5);T('Nomor Izin',78.98,258.5);T('Pengelolaan',78.98,271.1);T(':',201.65,258.5);
+  F('izin',220.73,258.5,375);T('masa berlaku s.d.',380,258.5);F('izin_m',470,258.5,XM+5);
+  T('10.',57.6,296.5);T('Klasifikasi Jasa Parkir',78.98,296.5);T(':',201.65,296.5);
+  T('1. Penyediaan atau penyelenggaraan tempat parkir :',219.65,296.5);
+  const K=[['a.',308.7,['Penyediaan atau penyelenggaraan tempat parkir oleh','pihak swasta']],
+   ['b.',334.0,['Penyediaan tempat parkir yang dimiliki oleh','Pemerintah, Pemerintah Provinsi DKI Jakarta, dan','pemerintah daerah lainnya, yang penyelenggaraan','dan/atau pengelolaannya diserahkan kepada pihak','swasta']],
+   ['c.',397.2,['Penyediaan tempat parkir yang diselenggarakan oleh','perkantoran yang hanya digunakan untuk','karyawannya sendiri dengan dipungut bayaran']]];
+  K.forEach((k,i)=>{T(k[0],232,k[1]);k[2].forEach((s,j)=>T(s,246,k[1]+j*12.65));if(S(4).includes(i))CK(210.65,k[1])});
+  T('2.',219.65,435.5);T('Pelayanan memarkirkan kendaraan (parkir valet)',234.89,435.5);
+  if(S(4).includes(3))CK(210.65,435.5);
+
+  UL('IV. Keterangan Lain-lain',57.6,472,' :');
+  ['ket1','ket2','ket3','ket4'].forEach((k,i)=>F(k,57.6,497+i*12.65,560));
+  JU('Dengan menyadari sepenuhnya akan segala akibat termasuk sanksi-sanksi sesuai dengan',103.58,560,456.4);
+  JU('ketentuan perundang-undangan yang berlaku, saya menyatakan bahwa apa yang telah saya beri',57.6,572.7,502.4);
+  T('tahukan di atas, beserta lampiran-lampirannya adalah benar dan lengkap.',57.6,585.3);
+  T('Jakarta,',362.47,624);F('tgl',404.69,624,XM);
+  T('Petugas Penerima,',134.06,649);T('Wajib Pajak/Penanggung Pajak,',354.43,649);
+  T(dots(113.42,247),113.42,725);F('ttdn',361.5,725,505);
+  T('NIP',120.98,737.6);T(dots(145,247),145,737.6);
+  C('Nama Jelas/Stempel',433,737.6,11.04,'A');
+  T('Keterangan :',57.6,783,9.96);T('Lembar',57.6,794.4,9.96);T('1',100.22,794.4,9.96);T('Badan Pendapatan Daerah',108.5,794.4,9.96);
+  T('2',100.22,806,9.96);T('Wajib Pajak',108.5,806,9.96);
+ }
+}
+
+/* ---------- Backend PDF & kanvas ---------- */
+function pdfB(doc){const sf=f=>{doc.setFont(FJ[f][0],FJ[f][1])};return{
+ text(s,x,y,sz,f){sf(f);doc.setFontSize(sz);doc.text(s,x,y)},
+ w(s,sz,f){sf(f);doc.setFontSize(sz);return doc.getTextWidth(s)},
+ line(a,b,c,d,w){doc.setLineWidth(w);doc.line(a,b,c,d)},
+ rect(x,y,w,h){doc.rect(x,y,w,h,'F')},
+ img(x,y,w,h){doc.addImage(LOGO,'PNG',x,y,w,h)}}}
+function cvB(ctx,k){const ft=(sz,f)=>{ctx.font=(f.indexOf('I')>0?'italic ':'')+(f.indexOf('B')>0?'bold ':'')+(sz*k)+'px '+(f[0]==='T'?'"Times New Roman",Times,"Liberation Serif",serif':'Arial,Helvetica,"Liberation Sans",sans-serif')};return{
+ text(s,x,y,sz,f){ft(sz,f);ctx.fillText(s,x*k,y*k)},
+ w(s,sz,f){ft(sz,f);return ctx.measureText(s).width/k},
+ line(a,b,c,d,w){ctx.lineWidth=w*k;ctx.beginPath();ctx.moveTo(a*k,b*k);ctx.lineTo(c*k,d*k);ctx.stroke()},
+ rect(x,y,w,h){ctx.fillRect(x*k,y*k,w*k,h*k)},
+ img(x,y,w,h){ctx.drawImage(logoImg,x*k,y*k,w*k,h*k)}}}
+let Z=1;const PXW=PW*96/72;
+function zoomTo(z){Z=Math.max(.3,Math.min(3,z));const w=$('pvin');w.style.transform='scale('+Z+')';
+ const s=$('pvsize');s.style.width=Math.round(PXW*Z)+'px';s.style.height=Math.round(w.offsetHeight*Z)+'px';$('zl').textContent=Math.round(Z*100)+'%'}
+function fit(){zoomTo(Math.min(1,($('pvbody').clientWidth-32)/PXW))}
+async function tampil(){const w=$('pvin');w.innerHTML='';const V=vals();await logoReady;const k=PXW/PW*2;
+ for(let p=0;p<NP;p++){const cv=document.createElement('canvas');cv.width=Math.round(PW*k);cv.height=Math.round(PH*k);cv.style.cssText='display:block;width:'+PXW+'px;height:'+(PH*96/72)+'px;background:#fff;margin:0 0 14px;box-shadow:0 2px 12px #0006';
+  const c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,cv.width,cv.height);c.fillStyle='#000';c.strokeStyle='#000';c.textBaseline='alphabetic';c.lineCap='butt';draw(cvB(c,k),p,V);w.appendChild(cv)}
+ $('pv').classList.add('on');document.body.style.overflow='hidden';fit();$('pvbody').scrollTop=0}
+function tutup(){$('pv').classList.remove('on');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')tutup()});
+function nama(){const m=($('nama_op').value||'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,'');return 'SPOPD_PBJT_Parkir'+(m?'_'+m:'')+'.pdf'}
+async function kirim(blob,fn){
+ let d=null;try{d=window.claude&&await claude.use('downloads')}catch(e){}
+ if(d){try{await d.save({filename:fn,data:blob})}catch(e){if(!e||e.code!=='declined')alert('PDF tidak dapat disimpan di sini.')}return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+async function simpanPDF(){
+ const J=window.jspdf&&window.jspdf.jsPDF;if(!J){alert('Pustaka PDF belum termuat. Periksa koneksi lalu coba lagi.');return}
+ const btn=$('bpdf'),t=btn.textContent;btn.disabled=true;btn.textContent='Menyiapkan…';
+ try{const V=vals(),doc=new J({unit:'pt',format:[PW,PH],orientation:'portrait',compress:true});
+  doc.setDrawColor(0);doc.setFillColor(0);doc.setTextColor(0);doc.setProperties({title:'SPOPD PBJT Jasa Parkir'});
+  const B=pdfB(doc);for(let p=0;p<NP;p++){if(p)doc.addPage([PW,PH],'portrait');draw(B,p,V)}
+  await kirim(doc.output('blob'),nama())}
+ catch(e){alert('PDF gagal dibuat.')}
+ finally{btn.disabled=false;btn.textContent=t}}
+document.addEventListener('click',e=>{const o=e.target.closest('#f .opt');if(!o)return;const g=o.closest('.og'),all=[...g.querySelectorAll('.opt')];
+ if(g.dataset.m){o.classList.toggle('sel');return}
+ const on=o.classList.contains('sel');all.forEach(x=>{x.classList.toggle('sel',!on&&x===o)})});
+$('nopbb').addEventListener('input',e=>{const d=e.target.value.replace(/\D/g,'').slice(0,18),o=[];let i=0;for(const n of [2,2,3,3,3,4,1]){if(i>=d.length)break;o.push(d.slice(i,i+n));i+=n}e.target.value=o.join('.')});
+</script>
+</body>
+</html>
