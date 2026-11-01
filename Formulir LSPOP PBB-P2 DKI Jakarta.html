@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LSPOP PBB-P2 (Format 10-A)</title>
+<style>
+:root{--bg:#eef1f5;--tbg:#0f4c81;--mut2:#5b6572;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--tbg:#6db3f2;--mut2:#9aa6b4}}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#111;font:14px/1.4 Arial,Helvetica,sans-serif;-webkit-tap-highlight-color:transparent}
+.tb{position:sticky;top:env(safe-area-inset-top,0px);z-index:150;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:var(--tbg);color:#fff}
+.tb b{flex:1;min-width:180px}
+.tb button,.pvbar button{border:0;border-radius:6px;padding:8px 14px;min-width:38px;font:700 14px Arial,Helvetica,sans-serif;cursor:pointer;background:#fff;color:#0f4c81;touch-action:manipulation}
+.wrap{overflow-x:auto;padding:14px}
+.note{color:var(--mut2);font-size:12px;max-width:820px;margin:8px auto;padding:0 14px}
+.stage{overflow-x:auto}
+.sheet{background:#fff;color:#000;width:215mm;height:330mm;display:flex;flex-direction:column;overflow:hidden;margin:0 auto;padding:5mm 7mm 4mm;font:7.5pt/1.25 Arial,Helvetica,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.top{display:flex;justify-content:space-between;margin-bottom:1mm}
+.top span{border:.3mm solid #000;padding:.6mm 2mm}.top span:first-child{font-weight:700;font-size:8.5pt;border-width:.5mm}.top span:last-child{padding:.6mm 9mm}
+.hd{display:flex;border:.3mm solid #000;text-align:center}.hd>div:first-child{flex:1;padding:1.5mm;display:flex;flex-direction:column;justify-content:center}.nfw{width:81mm;border-left:.3mm solid #000;display:flex;flex-direction:column}.nft{height:2.5mm;border-bottom:.3mm solid #000}.nfg{background:#c8c8c8;padding:.8mm 0;border-bottom:.3mm solid #000}.nfh{font-weight:700;font-size:6.5pt;padding:.4mm 0 .8mm}.nfb{display:flex;justify-content:center}.nfe{flex:1;min-height:3mm}
+.hd .bg{font-size:9.5pt}
+.nf{text-align:left}
+.bar{background:#000;color:#fff;font-weight:700;text-align:center;padding:.5mm 0;margin-top:0;font-size:8pt}
+.gr{background:#c8c8c8;padding:2mm 3.5mm;border-bottom:.3mm solid #000}.gr .lb{width:34mm;flex:none}.gr .ci{font-weight:700;font-size:6.8pt;align-items:center}.gr .fl{flex:1;justify-content:space-between}.gr .bx{width:4mm;height:4.6mm;font:700 9pt/4.4mm Arial;margin:0;background:transparent}.gr .b{background:transparent}
+.rw{display:flex;align-items:center;gap:1.5mm}.nr{align-items:flex-start}.nr .lb{margin-top:4.3mm}.nr .sd{margin-top:3.5mm}
+.lb{white-space:nowrap}
+.sd{margin-left:auto;margin-right:12.5mm;display:grid;grid-template-columns:auto auto;column-gap:3mm;row-gap:1mm;align-items:center}
+.sd div{display:contents}
+.fl{display:flex;flex-wrap:wrap;gap:.8mm 4mm;align-items:center}
+.ci{display:inline-flex;gap:1mm;align-items:flex-start}
+.bx{flex:none;width:2.8mm;height:2.8mm;border:.25mm solid #000;background:#fff;font:normal 7pt/2.6mm Arial;text-align:center;margin-top:.2mm}
+.bs{display:inline-flex}
+.b{display:block;width:2.8mm;height:3.3mm;border:.25mm solid #000;background:#fff;font:700 7pt/3.1mm Arial;text-align:center;margin-right:-.25mm;overflow:hidden}
+.np{display:inline-flex;gap:4mm}.nc:nth-child(2){margin-right:3.6mm}.np .b,.sd .b{width:4mm;height:4.6mm;font:700 8.5pt/4.4mm Arial}.sd .b{height:4.9mm}.nfb .b{width:3.8mm;height:3.9mm;font:700 8pt/3.7mm Arial;background:transparent}
+.nc{display:flex;flex-direction:column}
+.nc small{font-size:6.5pt;font-weight:700;margin-bottom:.6mm}
+.jg{display:grid;grid-template-columns:repeat(4,1fr);gap:1mm 3mm;padding:1mm}
+.cell .t{font-weight:700;text-decoration:underline}
+.wide{grid-column:1/-1}
+.wide .cl{column-count:4;column-gap:3mm}
+.sec{border-left:.3mm solid #000;border-right:.3mm solid #000;font-size:.87em}
+.ro{display:grid;grid-template-columns:34mm 37.7mm 37.7mm 37.7mm 30mm 1fr;align-items:start;padding:.4mm 0 .4mm 4mm}
+.ro .lb{margin-top:.5mm}.ro span.lb{font-weight:400;margin-top:.9mm}
+.g2{grid-column:2/4;display:flex}.g3{grid-column:4/7;display:flex;align-items:center}
+.sec .ci{font-weight:700;align-items:flex-start}
+.sec .ci span{white-space:nowrap;line-height:3.2mm;margin-top:.6mm}
+.sec .bx{width:3.8mm;height:4.4mm;margin:0;font:700 8pt/4.2mm Arial}
+.sec .b{width:4.2mm;height:4mm;font:700 7.5pt/3.8mm Arial}
+.rw2{display:flex;border-top:.3mm solid #000;padding:1mm;gap:4mm}
+.rw2>div{flex:1;display:flex;flex-wrap:wrap;gap:1mm 3mm;align-items:center}
+.kv{display:inline-flex;align-items:center;gap:1mm}
+.ft{display:flex;justify-content:space-between;font-size:6pt;margin-top:1.2mm;padding:0 21mm 0 3.7mm}.ft span:first-child{font-weight:700;font-size:6.5pt}
+.v5{border-bottom:.3mm solid #000}
+.v{display:flex;border-top:.3mm solid #000}.v:first-child{border-top:0}
+.v>.c{padding:0 0 0 3.7mm;box-sizing:border-box}.v>.c+.c{border-left:.3mm solid #000}
+.v>.l{flex:none;width:51.6%}.v>.m{flex:none;width:19.4%;padding-left:4.2mm}.v>.r{flex:1;padding-left:4.1mm}
+.fx{display:flex;align-items:center}.vl{white-space:nowrap}.vb,.v5 .v{font-weight:700}
+.v .kv{gap:.3mm;font-weight:700;margin-right:3mm}
+.v .b{width:3.9mm;height:4.4mm;font:700 7.5pt/4.2mm Arial}
+.hh{line-height:3.2mm;margin:0 0 1mm .5mm}.v .col .kv{display:flex;margin-bottom:1.4mm}
+.stk{display:flex;flex-direction:column}.mm{font-size:1.25em}
+@media print{
+ @page{size:215mm 330mm;margin:0}
+ body{background:#fff}
+ .wrap{display:block;padding:0;max-width:none}
+ form{display:none}
+ .stage{overflow:visible}
+ .sheet{box-shadow:none;margin:0}
+}
+
+.sheet{color-scheme:light}
+.sheet>*{flex:none}.sheet>.jg{flex:1 1 auto;align-content:space-evenly}
+.sheet input.b,.sheet input.bx{appearance:none;-webkit-appearance:none;border-radius:0;padding:0;color:#000;font-family:Arial,Helvetica,sans-serif;outline:0}
+.sheet input.b{text-align:center;text-transform:uppercase;min-width:0}
+.sheet input.bx{display:grid;place-content:center;cursor:pointer;margin-top:.2mm}
+.sec .ci input.bx,.gr .ci input.bx{margin-top:0}
+.sheet input.bx:checked::after{content:"\2715"}
+.sheet input.b:focus,.sheet input.bx:focus-visible{outline:1px solid #0f4c81;outline-offset:-1px;position:relative;z-index:1}
+.sheet label.ci{cursor:pointer}
+#pv{position:fixed;inset:0;z-index:300;display:none;flex-direction:column;background:#2b2f36}
+#pv.on{display:flex}
+.pvbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:var(--tbg);color:#fff}
+.pvbar b{flex:1;min-width:120px}
+.pvbar span{min-width:48px;text-align:center;font-weight:700}
+.pvbody{flex:1;overflow:auto;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.pvsize{margin:0 auto;position:relative}
+.pvin{width:813px;transform-origin:0 0}
+.pvin canvas{display:block;width:813px;height:auto;margin:0 0 14px;background:#fff;box-shadow:0 2px 12px #0006}
+@media print{.tb,.note,#pv{display:none!important}.sheet{transform:none!important;margin:0!important;height:329mm!important;max-height:329mm!important;overflow:hidden!important;break-after:avoid!important;page-break-after:avoid!important;break-inside:avoid!important}.stage{height:auto!important;overflow:visible!important}html,body{height:auto!important;margin:0!important;padding:0!important;overflow:hidden!important}.wrap{display:block!important;padding:0!important;gap:0!important;margin:0!important;max-width:none!important}}
+</style>
+</head>
+<body>
+<div class="tb"><b>Formulir LSPOP PBB-P2 DKI Jakarta – Formulir Pengisian</b>
+<button onclick="tampil()">Tampilkan</button><button onclick="reset()">Kosongkan</button><button id="bpdf" onclick="simpanPDF()">Simpan PDF</button></div>
+<div class="wrap"><div class="stage"><article class="sheet" id="sheet"></article></div></div>
+<p class="note">Isi langsung pada formulir (1 kotak = 1 huruf / angka; klik kotak pilihan untuk menandai). Klik “Tampilkan” untuk melihat hasilnya (bisa di-zoom) dan “Simpan PDF” untuk menyimpannya sebagai PDF.</p>
+<div id="pv" role="dialog" aria-label="Pratinjau"><div class="pvbar"><b>Pratinjau</b><button onclick="zoomTo(Z-.1)" aria-label="Perkecil">−</button><span id="zl">100%</span><button onclick="zoomTo(Z+.1)" aria-label="Perbesar">+</button><button onclick="pfit()">Pas</button><button onclick="zoomTo(1)">100%</button><button onclick="simpanPDF()">Simpan PDF</button><button onclick="tutup()">Tutup</button></div><div class="pvbody" id="pvbody"><div class="pvsize" id="pvsize"><div class="pvin" id="pvin"></div></div></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+var JI=["A. Perekaman Data","B. Pemutakhiran Data","C. Penghapusan data","D. Pengarsipan Data","E. Penilaian Individual"];
+var KD=["A. Sangat Baik","B. Baik","C. Sedang","D. Jelek"],KS=["A. Baja","B. Beton","C. Batu Bata","D. Kayu"];
+var AT=["A. Decrabon / Beton / Genteng Glazur / Bitumen","B. Genteng Beton / Aluminium / PVC","C. Genteng Biasa / Sirap / GRC / Polycarbonat","D. Asbes","E. Seng"];
+var DN=["A. Kaca / Alumunium / ACP / Jati / GRC / Gypsum","B. Beton / Beton Pracetak","C. Batu Bata / Conblok / Batako / Bata Ringan","D. Kayu","E. Seng"];
+var LT=["A. Marmer / Granit / PVC / Homogeneous Tile / Vinyl","B. Keramik Standar / Epoxy","C. Teraso","D. Ubin PC / Papan","E. Semen"];
+var LL=["A. Akustik / Jati / PVC / GRC / Gypsum","B. Triplek / Asbes / Bambu","C. Tidak Ada"],AE=["A. Ada","B. Tidak ada"],KF=["A. Diplester","B. Dengan Pelapis"];
+var JBS="#Rumah\n1a. Rumah Tinggal\n1b. Rumah Dikontrakkan\n1c. Rumah Kos / Guesthouse\n1d. Rumah Tinggal yang juga digunakan sebagai Tempat Usaha\n#Perkantoran / Universitas\n2a. Perkantoran Swasta\n2b. Perkantoran BUMN / BUMD\n2c. Universitas Negeri\n2d. Universitas Swasta / Sejenis\n2e. Mixed Use\n#Toko / Ruko / Rukan / dll\n4a. Toko / Kios / Apotek / Bengkel Motor\n4b. Ruko / Rukan\n4c. Restoran / Kafe\n4d. Ruko / Rukan yang digunakan sepenuhnya menjadi tempat tinggal\n#Rumah Sakit / Klinik\n5a. Rumah Sakit Pemerintah\n5b. Rumah Sakit Swasta\n5c. Klinik / Sejenis\n5d. Laboratorium Klinik\n#\n3. Pabrik\n#\n6. Gymnasium\n#\n9. Gedung Pemerintah\n#\n10. Lain-Lain\n#Hotel\n7a. Hotel\n7b. Wisma\n7c. Asrama / Mess\n7d. Motel / Losmen / Hostel / Sejenis\n#Bengkel / Gudang / Pertanian / Peternakan\n8a. Bengkel / Showroom Mobil\n8b. Gudang\n8c. Bangunan Pertanian / Peternakan\n8d. Workshop\n#Bangunan Tidak Kena Pajak\n11a. Rumah Ibadat\n11b. Kedutaan\n12. Bangunan Parkir\n#Rumah Susun\n13a. Rumah Susun / Apartemen\n13b. Kondominium / Kondotel / Apartemen Sewa / Flat\n13c. Rusunawa\n13d. Rumah Susun Mixed Use\n#\n14. Kanopi Pompa Bensin\n#\n15. Tangki Minyak / Tangki\n#Gedung Sekolah\n16a. Gedung Sekolah Negeri\n16b. Gedung Sekolah Swasta\n#Objek Khusus\n17a. Jalan Tol\n17b. Bandar Udara / Lapangan Terbang\n17c. Stasiun Kereta Api / LRT / MRT\n17d. Bendungan\n17e. Pelabuhan / Dermaga / Galangan Kapal / Jetty\n17f. Lapangan Golf\n17g. Stadion\n17h. Sirkuit Balap\n17i. Pabrik Semen / Pupuk\n17j. Tempat Rekreasi\n17k. Tempat Penampungan / Kilang Minyak, Air, atau Gas\n17l. Pipa Minyak, Air, atau Gas\n17m. Stasiun Pengisian Bahan Bakar / SPKLU\n17n. Menara / SUTET / SUTT\n17o. Objek Khusus Lainnya\n17p. Terminal Bus / Halte\n17q. Tempat Parkir Kontainer / Alat Berat\n17r. Pusat Perbelanjaan / Mall / Sejenis\n17s. Pasar / Swalayan\n17t. Hanggar";
+var JB=[];JBS.split("\n").forEach(function(l){if(l[0]==="#")JB.push({t:l.slice(1),i:[]});else JB[JB.length-1].i.push(l)});
+var JBG=JB.map(function(g){return g.t?[g.t,g.i]:g.i[0]});
+var sheet=document.getElementById("sheet");
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var KEYS=new Proxy({},{get:function(t,k){return k}});
+function B(k,n){var h="";for(var i=0;i<n;i++)h+='<input class="b" data-k="'+k+'" data-i="'+i+'" data-num="'+(k==="nf"?0:1)+'" maxlength="1" autocomplete="off" spellcheck="false" inputmode="'+(k==="nf"?"text":"numeric")+'">';return '<span class="bs">'+h+'</span>'}
+function KV(l,k,n){return '<span class="kv">'+B(k,n)+l+'</span>'}
+var BR={};BR[AT[0]]="A. Decrabon / Beton /|Genteng Glazur / Bitumen";BR[AT[1]]="B. Genteng Beton / Aluminium|/ PVC";BR[AT[2]]="C. Genteng Biasa / Sirap / GRC|/ Polycarbonat";BR[DN[0]]="A. Kaca / Alumunium / ACP|/ Jati / GRC / Gypsum";BR[DN[2]]="C. Batu Bata / Conblok / Batako|/ Bata Ringan";BR[LT[0]]="A. Marmer / Granit / PVC /|Homogeneous Tile / Vinyl";BR[LL[0]]="A. Akustik / Jati / PVC / GRC|/ Gypsum";
+function CH(k,o){return o.map(function(x){return '<label class="ci"><input type="checkbox" class="bx" data-g="'+k+'" data-v="'+esc(x)+'"><span>'+esc(BR[x]||x).replace("|","<br>")+'</span></label>'}).join("")}
+var NP=[["PROV",2],["KOTA/KAB",2],["KEC",3],["KEL",3],["BLOK",3],["NO. URUT",4],["KODE",1]];
+var DF={0:"3",1:"1",2:"7",4:"0",7:"0",10:"0"};
+function NOP(k){var i=0;return '<span class="np">'+NP.map(function(p){var h="";for(var j=0;j<p[1];j++,i++){var d=DF[i]||"";h+='<input class="b" data-k="'+k+'" data-i="'+i+'" data-num="1" data-d="'+d+'" value="'+d+'" maxlength="1" inputmode="numeric" autocomplete="off">'}return '<span class="nc"><small>'+p[0]+'</small><span class="bs">'+h+'</span></span>'}).join("")+'</span>'}
+function NF(k){var g=[2,2,3,2,4,3],h="",i=0;g.forEach(function(n,m){for(var j=0;j<n;j++,i++)h+='<input class="b" data-k="'+k+'" data-i="'+i+'" data-num="0" maxlength="1" autocomplete="off">';if(m<g.length-1)h+='<b class="b">.</b>'});return '<span class="bs">'+h+'</span>'}
+function RO(l,sel,o){return '<div class="ro"><span class="lb">'+l+'</span>'+CH(sel,o)+'</div>'}
+function render(){
+  var s=KEYS,h="";
+  h+='<div class="top"><span>LAYANAN INI TIDAK DIPUNGUT BIAYA APAPUN</span><span>FORMAT 10-A</span></div>';
+  h+='<div class="hd"><div><b>PEMERINTAH PROVINSI DKI JAKARTA - BADAN PENDAPATAN DAERAH</b><br><b class="bg">LAMPIRAN SURAT PEMBERITAHUAN OBJEK PAJAK BUMI DAN BANGUNAN<br>(LSPOP) PBB-P2</b></div><div class="nfw"><div class="nft"></div><div class="nfg"><div class="nfh">No. Formulir :</div><div class="nfb">'+NF(s.nf)+'</div></div><div class="nfe"></div></div></div>';
+  h+='<div class="bar">I. INFORMASI NOMOR OBJEK PAJAK</div>';
+  h+='<div class="gr"><div class="rw"><b class="lb">1. JENIS INPUT DATA</b><div class="fl">'+CH(s.ji,JI)+'</div></div></div>';
+  h+='<div class="gr" style="padding-top:2mm;padding-bottom:2mm"><div class="rw nr"><b class="lb">2. NOP</b>'+NOP(s.nop)+'<div class="sd"><div><b>3. JUMLAH BANGUNAN</b>'+B(s.jb,3)+'</div><div><b>4. BANGUNAN KE</b>'+B(s.bk,3)+'</div></div></div></div>';
+  h+='<div class="bar">II. INFORMASI TAMBAHAN UNTUK OBJEK YANG MEMILIKI NOP BERSAMA</div>';
+  h+='<div class="gr"><div class="rw nr"><b class="lb">5. NOP BERSAMA</b>'+NOP(s.nb)+'</div><i style="font-size:6pt;margin-left:8mm">(Hanya untuk objek Rumah Susun / Objek yang memiliki NOP Bersama)</i></div>';
+  h+='<div class="bar">III. JENIS PENGGUNAAN BANGUNAN</div><div class="jg">';
+  JB.forEach(function(g,n){var w=n===JB.length-1;h+='<div class="cell'+(w?' wide':'')+'">'+(g.t?'<div class="t">'+esc(g.t)+'</div>':'')+'<div class="'+(w?'cl':'')+'">'+g.i.map(function(x){return '<label class="ci" style="display:flex"><input type="checkbox" class="bx" data-g="pg" data-v="'+esc(x)+'">'+esc(x)+'</label>'}).join("")+'</div></div>'});
+  h+='</div><div class="bar">IV. RINCIAN DATA BANGUNAN</div>';
+  h+='<div class="sec"><div class="ro"><b class="lb">6. LUAS BANGUNAN (m²)</b><span class="g2">'+B(s.lb,9)+'</span><span class="g3" style="gap:7mm"><b>7. JUMLAH LANTAI</b>'+B(s.jl,2)+'</span></div>';
+  h+='<div class="ro"><b class="lb">8. TAHUN DIBANGUN</b><span class="g2">'+B(s.td,4)+'</span></div>';
+  h+='<div class="ro"><b class="lb">9. TAHUN DIRENOVASI</b><span class="g2">'+B(s.tr,4)+'</span><span class="g3" style="gap:3.7mm"><b>10. DAYA LISTRIK TERPASANG (WATT)</b>'+B(s.dl,6)+'</span></div>';
+  h+=RO("11. KONDISI PADA UMUMNYA",s.kd,KD)+RO("12. KONSTRUKSI",s.ks,KS)+RO("13. ATAP",s.at,AT)+RO("14. DINDING",s.dn,DN)+RO("15. LANTAI",s.lt,LT)+RO("16. LANGIT-LANGIT",s.ll,LL)+'</div>';
+  h+='<div class="bar">V. FASILITAS</div>';
+  function KVW(l,v,n,w){return '<span class="kv"'+(w?' style="width:'+w+'"':'')+'>'+B(v,n)+l+'</span>'}
+  h+='<div class="sec v5">'
+  +'<div class="v"><div class="c l fx" style="padding-top:2.4mm;padding-bottom:2.4mm"><span class="vl" style="width:37.3mm">17. JUMLAH AC</span>'+KV("Split",s.as,2)+KV("Window",s.aw,2)+KV("Ceiling / Cassete",s.ac,2)+'</div><div class="c r fx"><span class="vl" style="width:26mm">18. AC Sentral</span><span class="fx" style="gap:15mm">'+CH(s.ae,AE)+'</span></div></div>'
+  +'<div class="v"><div class="c l" style="padding-top:2.6mm;padding-bottom:2.6mm"><div class="fx" style="align-items:flex-start"><b class="vl vb" style="width:37.3mm;line-height:4.4mm">19. LUAS KOLAM RENANG (m²)</b>'+B(s.kr,4)+'<span class="stk" style="margin-left:11mm">'+CH(s.kf,KF)+'</span></div></div><div class="c r" style="padding-top:2.6mm;padding-bottom:2.6mm"><b class="vl vb" style="display:block;line-height:4.2mm">20. LUAS PERKERASAN HALAMAN (m²)</b><div class="fx" style="margin-left:4.6mm">'+KVW("Ringan",s.pr,5,"33.8mm")+KVW("Berat",s.pb,5)+'</div><div class="fx" style="margin:1.3mm 0 0 4.6mm">'+KVW("Sedang",s.ps,5,"33.8mm")+KVW("Dengan Penutup Lantai",s.pp,5)+'</div></div></div>'
+  +'<div class="v"><div class="c l fx" style="padding-top:3.3mm;align-items:flex-start"><span class="vl" style="width:37.3mm;line-height:3.2mm">21. JUMLAH LAPANGAN TENIS</span><div class="col" style="width:34mm"><div class="hh">DENGAN LAMPU</div>'+KV("Beton",s.tdb,2)+KV("Aspal",s.tda,2)+KV("Tanah Liat / Rumput",s.tdt,2)+'</div><div class="col"><div class="hh">TANPA LAMPU</div>'+KV("Beton",s.ttb,1)+KV("Aspal",s.tta,1)+KV("Tanah Liat / Rumput",s.ttt,1)+'</div></div>'
+  +'<div class="c m" style="padding-top:3.3mm"><div class="hh">22. JUMLAH LIFT</div><div class="col" style="margin-left:7mm">'+KV("Penumpang",s.lp,2)+KV("Kapsul",s.lk,2)+KV("Barang",s.lg,2)+'</div></div>'
+  +'<div class="c r" style="padding-top:3.3mm;padding-left:8mm"><div class="hh">23. JUMLAH TANGGA BERJALAN</div><div class="fx" style="margin:0 0 1.2mm 3.7mm"><span style="width:18mm">Lebar &lt; 0,80 <span class="mm">m</span></span>'+B(s.tk,2)+'</div><div class="fx" style="margin-left:3.7mm"><span style="width:18mm">Lebar &gt; 0,80 <span class="mm">m</span></span>'+B(s.tl,2)+'</div></div></div>'
+  +'</div>';
+  
+  
+  
+  h+='<div class="ft"><span>BAPENDA JAKARTA LSPOP PBB 01</span><span>Halaman 1 dari 1</span></div>';
+  sheet.innerHTML=h;fit()}
+function fit(){var b=6.25;sheet.style.fontSize=b+"pt";while(sheet.scrollHeight>sheet.clientHeight+1&&b>5){b-=.25;sheet.style.fontSize=b+"pt"}}
+async function savePdf(btn){
+  var old=btn.textContent,name="lspop-pbb-p2.pdf";
+  if(!window.html2canvas||!window.jspdf){try{window.print()}catch(x){alert("Pustaka PDF belum termuat. Periksa koneksi internet, atau tekan Ctrl+P untuk mencetak.")}return}
+  btn.disabled=true;btn.textContent="Menyiapkan PDF…";
+  try{
+    if(document.activeElement)document.activeElement.blur();
+    var dl=null;try{dl=window.claude&&await window.claude.use("downloads")}catch(x){}
+    var cv=await shot();
+    var pdf=new window.jspdf.jsPDF({unit:"mm",format:[215,330]});
+    pdf.addImage(cv.toDataURL("image/jpeg",0.95),"JPEG",0,0,215,330);
+    var blob=pdf.output("blob");
+    if(dl){await dl.save({filename:name,data:blob})}
+    else{
+      var touch=false;try{touch=matchMedia("(pointer:coarse)").matches}catch(x){}
+      var shared=false;
+      if(touch&&navigator.canShare&&window.File){
+        try{var file=new File([blob],name,{type:"application/pdf"});
+          if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});shared=true}}
+        catch(x){if(x&&x.name==="AbortError")return}
+      }
+      if(!shared)pdf.save(name);
+    }
+  }catch(x){if(!x||(x.code!=="declined"&&x.name!=="AbortError"))alert("PDF gagal dibuat. Coba lagi, atau tekan Ctrl+P untuk mencetak.")}
+  finally{btn.disabled=false;btn.textContent=old}
+}
+render();
+var all=[].slice.call(sheet.querySelectorAll("input.b"));
+function ok(c,e){return e.dataset.num==="1"?/\d/.test(c):/[A-Z0-9 .,\/\-'()&]/.test(c)}
+function fillFrom(e,str){var i=all.indexOf(e),last=e;
+  str.toUpperCase().split("").forEach(function(c){if(!ok(c,e)||i>=all.length)return;all[i].value=c;last=all[i];i++});
+  (all[i]||last).focus()}
+all.forEach(function(e,i){
+  e.addEventListener("focus",function(){e.select()});
+  e.addEventListener("input",function(){var v=e.value.toUpperCase();
+    if(v.length>1){fillFrom(e,v);return}
+    if(v&&!ok(v,e)){e.value="";return}
+    e.value=v;if(v&&all[i+1])all[i+1].focus()});
+  e.addEventListener("keydown",function(k){
+    if(k.key==="Backspace"&&!e.value&&all[i-1]){all[i-1].value="";all[i-1].focus();k.preventDefault()}
+    else if(k.key==="ArrowLeft"&&all[i-1]){all[i-1].focus();k.preventDefault()}
+    else if(k.key==="ArrowRight"&&all[i+1]){all[i+1].focus();k.preventDefault()}});
+  e.addEventListener("paste",function(k){k.preventDefault();fillFrom(e,((k.clipboardData||window.clipboardData).getData("text")||"").replace(/[\r\n\t]+/g," "))});
+});
+sheet.addEventListener("change",function(e){var t=e.target;
+  if(t.type==="checkbox"&&t.checked)sheet.querySelectorAll('input[type=checkbox][data-g="'+t.dataset.g+'"]').forEach(function(o){if(o!==t)o.checked=false})});
+function $(id){return document.getElementById(id)}
+var Z=1,PXW=813;
+function shot(){return window.html2canvas(sheet,{scale:(window.innerWidth<700?2:2.2),backgroundColor:"#ffffff",useCORS:true,windowWidth:1400,
+  onclone:function(d){var sh=d.getElementById("sheet");sh.style.transform="none";sh.style.margin="0";
+    sh.querySelectorAll("input.b").forEach(function(i){var b=d.createElement("b");b.className=i.className;b.textContent=i.value.toUpperCase();i.replaceWith(b)});
+    sh.querySelectorAll("input.bx").forEach(function(i){var x=d.createElement("i");x.className="bx";x.textContent=i.checked?"\u2715":"";i.replaceWith(x)})}})}
+window.zoomTo=function(z){Z=Math.max(.3,Math.min(3,z));var w=$("pvin");w.style.transform="scale("+Z+")";var q=$("pvsize");q.style.width=Math.round(PXW*Z)+"px";q.style.height=Math.round(w.offsetHeight*Z)+"px";$("zl").textContent=Math.round(Z*100)+"%"};
+window.pfit=function(){zoomTo(Math.min(1,($("pvbody").clientWidth-32)/PXW))};
+window.tampil=async function(){
+  if(!window.html2canvas){alert("Pustaka pratinjau belum termuat. Periksa koneksi lalu coba lagi.");return}
+  if(document.activeElement)document.activeElement.blur();
+  var w=$("pvin");w.innerHTML='<p style="color:#fff">Menyiapkan pratinjau…</p>';
+  $("pv").classList.add("on");document.body.style.overflow="hidden";
+  try{var cv=await shot();w.innerHTML="";w.appendChild(cv)}catch(x){w.innerHTML='<p style="color:#fff">Pratinjau gagal dibuat.</p>'}
+  pfit();$("pvbody").scrollTop=0};
+window.tutup=function(){$("pv").classList.remove("on");document.body.style.overflow=""};
+document.addEventListener("keydown",function(e){if(e.key==="Escape")tutup()});
+window.reset=function(){all.forEach(function(e){e.value=e.dataset.d||""});sheet.querySelectorAll("input.bx").forEach(function(c){c.checked=false})};
+window.simpanPDF=function(){savePdf($("bpdf"))};
+})();
+</script>
+</body>
+</html>
